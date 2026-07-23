@@ -1256,9 +1256,7 @@
           </table>
           ${details}
           <h2>Interaction Log</h2>
-          <pre>${JSON.stringify(state.interactions, null, 2)}</pre>
-
-</body>
+          <pre>${JSON.stringify(state.interactions, null, 2)}</pre></body>
         </html>
       `;
     }
@@ -1600,5 +1598,26 @@
   document.addEventListener('submit',function(event){const s=screen();if(s&&event.target&&s.contains(event.target))attemptStart(event)},true);
 })();
 </script>
-</body>
+
+<script id="p26LocalFileSubmitFallback">
+(function(){
+  const form=document.getElementById('netlifySubmissionForm');
+  if(!form || form.dataset.localFallbackAttached) return;
+  form.dataset.localFallbackAttached='1';
+  form.addEventListener('submit',function(event){
+    if(event.defaultPrevented) return;
+    if(location.protocol==='file:'){
+      event.preventDefault();
+      try{
+        const project=(location.pathname.split(/[\\/]/).pop()||'').toLowerCase();
+        const done=JSON.parse(localStorage.getItem('p26-pre2-submitted-projects')||'{}');
+        done[project]={file:project,submittedAt:new Date().toISOString(),submittedLocal:new Date().toLocaleString()};
+        localStorage.setItem('p26-pre2-submitted-projects', JSON.stringify(done));
+        sessionStorage.setItem('p26-pre2-last-submitted-project',project);
+      }catch(e){}
+      location.href='index.html#finished';
+    }
+  }, false);
+})();
+</script></body>
 </html>
