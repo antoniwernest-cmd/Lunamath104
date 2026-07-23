@@ -1,0 +1,453 @@
+﻿<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AfterCatPre2</title>
+  <style>
+    :root{--ink:#232323;--blue:#9fd2f1;--pale:#fff6c8;--soft:#eef8ff;--green:#c7f4c9;--gold:#ffd65a;--red:#f06b5f;--teal:#1d7893}
+    *{box-sizing:border-box}body{margin:0;background:var(--soft);color:var(--ink);font-family:"Century Gothic","Trebuchet MS",Arial,sans-serif;font-weight:700}button,select,input,textarea{font:inherit}.hidden{display:none!important}
+    .start{position:fixed;inset:0;background:var(--soft);display:grid;place-items:center;z-index:50}.start-card{width:min(520px,92vw);border:4px solid var(--ink);background:#fff;box-shadow:8px 8px 0 var(--blue);padding:22px;display:grid;gap:14px}.start-card h1{margin:0;text-align:center;font-size:36px}.start-card label,.admin label{display:grid;gap:4px}.start-card input,.start-card select,.admin select,.admin input,.admin textarea,.answer select,.answer input{border:3px solid var(--ink);background:#fff;padding:9px;width:100%}button{border:3px solid var(--ink);background:#dff2ff;padding:8px 11px;cursor:pointer}.submit{background:var(--green)}
+    .shell{display:grid;grid-template-columns:248px 1fr;min-height:100vh;gap:8px;padding:8px}aside{border:4px solid var(--ink);background:#fff;box-shadow:6px 6px 0 var(--blue);padding:10px;display:flex;flex-direction:column;gap:9px;max-height:calc(100vh - 16px);overflow:auto}.brand{text-align:center;font-size:24px;border-bottom:3px solid var(--ink);padding-bottom:5px}.brand-logo{width:74px;max-width:55%;display:block;margin:0 auto 5px;object-fit:contain}.status-row{display:flex;justify-content:space-between;gap:8px;border-bottom:1px solid #b9cde0;padding:3px 0;font-size:14px}.timer{font-variant-numeric:tabular-nums;min-width:56px;text-align:right}.checkgrid{display:grid;grid-template-columns:1fr 1fr;gap:6px}.checkgrid label{border:1px solid #98bad4;background:#f6fbff;padding:5px;display:flex;gap:6px;align-items:center;font-size:13px}
+    .top{border:4px solid var(--ink);background:#fff;box-shadow:6px 6px 0 var(--blue);padding:8px;display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:8px}.prompt{flex:1 1 100%;border:3px solid var(--ink);border-radius:10px;padding:8px;background:#fff;font-size:18px}.controls{display:flex;flex-wrap:wrap;gap:7px;align-items:center}
+    .work{display:grid;grid-template-columns:minmax(520px,1fr) 330px;gap:8px;align-items:start}.panel{border:4px solid var(--ink);background:#fff;box-shadow:6px 6px 0 var(--blue);padding:12px}.stage{min-height:430px;display:grid;place-items:center;gap:12px}.answer{display:grid;gap:10px}.answer select{font-size:22px}.card{border:4px solid var(--ink);background:var(--pale);padding:14px 20px;font-size:42px;text-align:center}.row{display:flex;flex-wrap:wrap;gap:9px;justify-content:center;align-items:center}.row select{border:3px solid var(--ink);background:#fff;padding:7px;font-size:20px;min-width:74px}.equation{font-size:48px}.word{font-size:30px;line-height:1.35;max-width:780px}.medium{font-size:30px}.mini{font-size:14px;color:#333}
+    .objects{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;max-width:650px}.apple,.cookie{width:38px;height:38px;border:3px solid var(--ink);border-radius:50%}.apple{background:#d74433}.cookie{background:#d89a47}.clock{width:240px;height:240px;border-radius:50%;border:7px solid var(--ink);position:relative;background:#fff}.clock-num{position:absolute;left:50%;top:50%;width:34px;height:34px;margin:-17px 0 0 -17px;display:grid;place-items:center;font-size:20px;transform:rotate(calc(var(--n)*30deg)) translateY(-94px) rotate(calc(var(--n)*-30deg))}.hand{position:absolute;left:50%;top:50%;height:7px;background:var(--ink);border-radius:5px;transform-origin:left center}.hour{width:58px}.minute{width:92px;background:var(--red)}
+    .shape{width:150px;height:150px;background:var(--teal);border:4px solid var(--ink)}.hex{clip-path:polygon(25% 5%,75% 5%,100% 50%,75% 95%,25% 95%,0 50%)}.rect{width:260px;height:150px;border:4px solid var(--ink);display:grid;grid-template-columns:repeat(4,1fr);background:#fff}.rect div{border-right:3px solid var(--ink)}.rect div:nth-child(-n+3){background:var(--gold)}
+    .bars{display:grid;gap:8px;width:min(620px,96%)}.barrow{display:grid;grid-template-columns:120px 1fr 36px;gap:8px;align-items:center}.track{height:30px;border:3px solid var(--ink);background:#fff}.fill{height:100%;background:var(--teal)}.spinner{width:220px;height:220px;border-radius:50%;border:5px solid var(--ink);background:conic-gradient(#e84848 0 90deg,#4d8df7 90deg 180deg,#52b65b 180deg 270deg,#ffd845 270deg 360deg)}.feedback{grid-column:1/-1;border:3px solid var(--ink);background:#fff;padding:8px;font-size:17px;min-height:42px}
+    @media(max-width:1080px){.shell{grid-template-columns:1fr}aside{max-height:none}.work{grid-template-columns:1fr}.stage{min-height:330px}}@media(max-width:640px){.shell{padding:6px}.work{display:block}.answer{margin-top:8px}.equation{font-size:38px}.medium,.word{font-size:22px}.stage{min-height:260px}.prompt{font-size:16px}.clock{width:190px;height:190px}.clock-num{transform:rotate(calc(var(--n)*30deg)) translateY(-74px) rotate(calc(var(--n)*-30deg));font-size:17px}}
+  
+  
+    /* Pre2 responsive safety layer: keeps phone/tablet layouts from overlapping or squeezing. */
+    @media (max-width: 900px){
+      html,body{width:100%;max-width:100%;overflow-x:hidden!important}
+      body{min-width:0!important}
+      .layout,.shell,.main,.work,.board,.stage,.panel,.answer,.top,.controls,.start-row,.bank,.pad,.wrap,.grid{max-width:100%!important;min-width:0!important}
+      .layout,.shell{display:grid!important;grid-template-columns:1fr!important;padding:6px!important;gap:8px!important}
+      aside,.admin{order:2!important;max-height:none!important;overflow:visible!important}
+      main,.main{width:100%!important;min-width:0!important}
+      .work,.board{display:grid!important;grid-template-columns:1fr!important;min-height:0!important;overflow:visible!important}
+      .top,.controls,.prompt-line,header{flex-wrap:wrap!important;align-items:flex-start!important}
+      .prompt,.prompt-line>*,header>div{min-width:0!important;max-width:100%!important}
+      .controls{width:100%!important}
+      .controls button,.controls select,.controls label{flex:1 1 130px!important;min-width:0!important}
+      button,select,input,textarea{max-width:100%!important}
+      .start{overflow:auto!important;place-items:start center!important;padding:8px!important}
+      .start-card{width:min(96vw,900px)!important;max-height:none!important;overflow:visible!important;padding:10px!important}
+      .code-grid,.car-grid{grid-template-columns:repeat(6,minmax(0,1fr))!important}
+      .code-choice,.car-choice{min-width:0!important}
+      .bank{grid-template-columns:1fr!important}
+      .bank-grid{grid-template-columns:repeat(auto-fit,minmax(92px,1fr))!important}
+      .landing,.dropzone,.stage{min-height:220px!important}
+      table{display:block!important;width:100%!important;overflow-x:auto!important;white-space:normal!important}
+      img{max-width:100%;height:auto}
+    }
+    @media (max-width: 560px){
+      .layout,.shell{padding:4px!important}
+      .admin,aside,.top,.work,.panel,.bank,.pad{padding:6px!important}
+      .question,.prompt{font-size:clamp(18px,6vw,24px)!important}
+      .controls button,.controls select,.controls label{flex:1 1 100%!important}
+      .code-grid,.car-grid{grid-template-columns:repeat(4,minmax(0,1fr))!important}
+      .code-choice img,.car-choice img{display:none!important}
+      .hood-code,.code-choice span{font-size:18px!important}
+    }
+    /* P26 shared entry numbers: same student-code numbers on every Pre2 entry screen. */
+    .code-grid,.p26-code-grid{display:grid!important;grid-template-columns:repeat(6,minmax(0,1fr))!important;gap:7px!important;margin-top:6px!important;width:100%!important;max-height:none!important;overflow:visible!important}
+    .code-choice,.p26-code-choice{border:3px solid #232323!important;background:#fffdf1!important;border-radius:14px!important;min-height:56px!important;height:56px!important;display:grid!important;grid-template-rows:1fr auto!important;place-items:center!important;cursor:pointer!important;padding:2px 4px!important;box-shadow:3px 3px 0 #9fd2f1!important}
+    .code-choice img,.p26-code-choice img{display:none!important}
+    .code-choice span,.p26-code-choice span{position:static!important;font-size:clamp(20px,2.2vw,30px)!important;line-height:1!important;font-weight:900!important;color:#101820!important;text-shadow:none!important;letter-spacing:0!important}
+    .code-choice .code-emoji,.p26-code-choice .code-emoji{font-size:16px!important;line-height:1!important;margin-top:1px!important}
+    .code-choice.selected,.p26-code-choice.selected{outline:4px solid #10b45d!important;background:#eaffef!important;border-radius:14px!important}
+    @media(max-width:640px){.code-grid,.p26-code-grid{grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:5px!important}.code-choice,.p26-code-choice{min-height:48px!important;height:48px!important}.code-choice span,.p26-code-choice span{font-size:18px!important}.code-choice .code-emoji,.p26-code-choice .code-emoji{font-size:13px!important}}
+
+    /* P26 landscape entry screen: wide, compact, no scrolling to find numbers. */
+    .start{place-items:start center!important;align-items:start!important;overflow:hidden!important;padding:8px!important}
+    .start-card,#startForm{width:min(1180px,98vw)!important;max-width:98vw!important;min-height:0!important;max-height:96vh!important;display:grid!important;grid-template-columns:1.15fr 2.85fr!important;grid-template-rows:auto auto!important;gap:8px 14px!important;align-items:start!important;padding:10px 14px!important;overflow:hidden!important}
+    .start-card h1,#startForm h1{font-size:clamp(24px,3vw,38px)!important;margin:0!important;line-height:1.05!important}
+    .start-title{grid-column:1/-1!important;display:flex!important;align-items:center!important;gap:12px!important;margin:0!important}
+    .start-title .logo,.start-card .logo,.start-card .brand-logo{width:64px!important;height:64px!important;object-fit:contain!important;margin:0!important}
+    .start-card>label,.start-row{grid-column:1!important;width:100%!important;margin:0!important;display:grid!important;grid-template-columns:1fr!important;gap:6px!important;align-self:start!important}
+    .start-row label{display:grid!important;gap:4px!important}
+    .start-card input,.start-card select,#startForm input,#startForm select{min-height:40px!important;padding:6px 8px!important;font-size:18px!important}
+    .start-card button#startBtn,.start-card .primary,#startForm .primary{grid-column:1!important;min-height:48px!important;font-size:20px!important;padding:6px 10px!important}
+    .code-grid,.p26-code-grid,#codeGrid{grid-column:2!important;grid-row:2!important;align-self:start!important;grid-template-columns:repeat(6,minmax(0,1fr))!important;gap:7px!important;margin:0!important;max-height:calc(96vh - 96px)!important;overflow:hidden!important}
+    .code-choice,.p26-code-choice,.code-button{height:54px!important;min-height:54px!important;border-radius:12px!important;padding:2px 4px!important}
+    .code-choice span,.p26-code-choice span,.code-button span{font-size:clamp(20px,2vw,28px)!important}
+    .code-choice .code-emoji,.p26-code-choice .code-emoji,.code-button .code-emoji{font-size:15px!important}
+    @media(max-width:760px){.start{overflow:auto!important}.start-card,#startForm{grid-template-columns:1fr!important;max-height:none!important;overflow:visible!important}.code-grid,.p26-code-grid,#codeGrid{grid-column:1!important;grid-row:auto!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;max-height:none!important}.code-choice,.p26-code-choice,.code-button{height:48px!important;min-height:48px!important}.start-title .logo,.start-card .logo,.start-card .brand-logo{width:48px!important;height:48px!important}}
+
+    /* P26 entry field order: ID, grade, start on the left; choices on the right. */
+    .start-card>h1{grid-column:1/-1!important;grid-row:1!important;margin:0!important;text-align:left!important}
+    .start-card>label:first-of-type{grid-column:1!important;grid-row:2!important}
+    .start-card>label:nth-of-type(2){grid-column:1!important;grid-row:3!important}
+    .start-card>button,#startBtn{grid-column:1!important;grid-row:4!important;align-self:start!important}
+    .start-row{grid-column:1!important;grid-row:2!important;display:grid!important;grid-template-columns:1fr!important;gap:6px!important;align-self:start!important}
+    .start-row label:first-of-type{grid-row:1!important}
+    .start-row label:nth-of-type(2){grid-row:2!important}
+    .start-row button,.start-row .primary{grid-row:3!important}
+    #codeGrid,.code-grid,.p26-code-grid,#carGrid,.car-grid{grid-column:2!important;grid-row:2 / span 4!important;align-self:start!important}
+    @media(max-width:760px){.start-card>h1,.start-card>label:first-of-type,.start-card>label:nth-of-type(2),.start-card>button,#startBtn,.start-row,#codeGrid,.code-grid,.p26-code-grid,#carGrid,.car-grid{grid-column:1!important;grid-row:auto!important}}
+
+    /* P26 Pre2 entry screen: hide grade selector from students while keeping default grade data. */
+    .start-card label:has(#gradeSelect),.start-card label:has(#gradeLevel),.start-card label:has(#grade),#startForm label:has(#gradeSelect),#startForm label:has(#gradeLevel),#startForm label:has(#grade){display:none!important}
+    #gradeSelect,#gradeLevel,#grade{display:none!important}
+    .start-row{grid-template-rows:auto auto!important}
+    .start-row button,.start-row .primary{grid-row:2!important}
+    .start-card>button,#startBtn{grid-row:3!important}
+
+  .p26-entry-left .p26-start-button{min-height:68px!important;border:4px solid #232323!important;background:#c7f4c9!important;box-shadow:4px 4px 0 #9fd2f1!important;font-size:32px!important;font-weight:900!important;color:#101820!important;border-radius:12px!important;cursor:pointer!important;display:grid!important;place-items:center!important;padding:8px 12px!important;width:100%!important;line-height:1!important}
+  .p26-entry-left .p26-start-button:disabled{opacity:.55!important;cursor:not-allowed!important}
+  #codeGrid.p26-code-grid .p26-code-choice{font-family:"Century Gothic","Trebuchet MS",Arial,sans-serif!important}
+
+</style>
+
+<style id="p26UniformEntryStyle">
+  #startScreen.start,#startScreen.start-screen,.start-screen#startScreen{position:fixed!important;inset:0!important;background:#eef8ff!important;display:grid!important;place-items:start center!important;z-index:9999!important;overflow:hidden!important;padding:8px!important}
+  #startScreen.hidden{display:none!important}
+  #startScreen[style*="display: none"]{display:none!important}
+  .p26-uniform-entry{width:min(1180px,98vw)!important;max-width:98vw!important;max-height:96vh!important;overflow:hidden!important;border:4px solid #232323!important;background:#fff!important;box-shadow:8px 8px 0 #9fd2f1!important;border-radius:8px!important;padding:10px 14px!important;display:grid!important;grid-template-columns:minmax(240px,330px) 1fr!important;grid-template-rows:auto 1fr!important;gap:10px 16px!important;align-items:start!important}
+  .p26-entry-title{grid-column:1/-1!important;display:flex!important;align-items:center!important;gap:12px!important;margin:0!important;border-bottom:3px solid #232323!important;padding-bottom:6px!important}
+  .p26-entry-title img{width:58px!important;height:58px!important;object-fit:contain!important;flex:0 0 auto!important}
+  .p26-entry-title h1{margin:0!important;text-align:left!important;font-size:clamp(24px,3vw,38px)!important;line-height:1!important;color:#123f68!important}
+  .p26-entry-left{grid-column:1!important;grid-row:2!important;display:grid!important;gap:8px!important;align-self:start!important}
+  .p26-entry-left label{display:grid!important;gap:5px!important;font-size:18px!important;font-weight:900!important}
+  .p26-entry-left input{width:100%!important;min-height:56px!important;border:3px solid #232323!important;background:#fff!important;padding:8px!important;font-size:26px!important;font-weight:900!important;text-align:center!important}
+  .p26-entry-left button{min-height:56px!important;border:3px solid #232323!important;background:#c7f4c9!important;padding:8px 12px!important;font-size:24px!important;font-weight:900!important;cursor:pointer!important;box-shadow:3px 3px 0 #9fd2f1!important}
+  #codeGrid.p26-code-grid{grid-column:2!important;grid-row:2!important;display:grid!important;grid-template-columns:repeat(6,minmax(0,1fr))!important;gap:7px!important;margin:0!important;align-self:start!important;max-height:calc(96vh - 94px)!important;overflow:hidden!important}
+  #codeGrid.p26-code-grid .p26-code-choice{height:54px!important;min-height:54px!important;border:3px solid #232323!important;background:#fffdf1!important;border-radius:12px!important;display:grid!important;grid-template-rows:1fr auto!important;place-items:center!important;cursor:pointer!important;padding:2px 4px!important;box-shadow:3px 3px 0 #9fd2f1!important}
+  #codeGrid.p26-code-grid .p26-code-choice.selected{outline:4px solid #10b45d!important;background:#eaffef!important}
+  #codeGrid.p26-code-grid .p26-code-choice span{font-size:clamp(20px,2vw,28px)!important;line-height:1!important;font-weight:900!important;color:#101820!important;text-shadow:none!important;letter-spacing:0!important}
+  #codeGrid.p26-code-grid .code-emoji{font-size:15px!important;line-height:1!important;margin-top:1px!important}
+  .p26-entry-hidden{display:none!important}
+  #startScreen .car-grid,#startScreen .car-choice{display:none!important}
+  @media(max-width:760px){#startScreen.start,#startScreen.start-screen,.start-screen#startScreen{overflow:auto!important}.p26-uniform-entry{grid-template-columns:1fr!important;max-height:none!important;overflow:visible!important}.p26-entry-left,#codeGrid.p26-code-grid{grid-column:1!important;grid-row:auto!important}#codeGrid.p26-code-grid{grid-template-columns:repeat(4,minmax(0,1fr))!important;max-height:none!important}.p26-entry-title img{width:46px!important;height:46px!important}}
+</style>
+</head>
+<body>
+<script>
+(function(){
+  const params=new URLSearchParams(window.location.search);
+  if(params.get('fresh')!=='1') return;
+  const keep='p26-pre2-submitted-projects';
+  const keys=[];
+  for(let i=0;i<localStorage.length;i++) keys.push(localStorage.key(i));
+  keys.forEach(k=>{
+    const low=String(k||'').toLowerCase();
+    if(k!==keep && (low.includes('pre2') || low.includes('catmaze'))) localStorage.removeItem(k);
+  });
+  history.replaceState(null,'',window.location.pathname);
+})();
+</script>
+
+  <div id="startScreen" class="start"><div class="start-card"><h1>AfterCatPre2</h1><label>Student Code <input id="studentCode" autocomplete="off" placeholder="Type student code"></label><label>Grade Level <select id="gradeSelect"><option value="1">Grade 1</option><option value="2">Grade 2</option><option value="3">Grade 3</option></select></label><button id="startBtn" type="button">Start</button></div></div>
+  <div class="shell"><aside class="admin"><div class="brand"><img class="brand-logo" src="big-bear-math-logo.png" alt="Big Bear Math logo">AfterCatPre2<br><small>P26-AFTERCATPRE2</small></div><div class="status-row"><span>Student</span><span id="studentStatus">--</span></div><div class="status-row"><span>Grade</span><span id="gradeStatus">--</span></div><div class="status-row"><span>Total Time</span><span id="totalTimer" class="timer">00:00</span></div><div class="status-row"><span>Page Time</span><span id="pageTimer" class="timer">00:00</span></div><div class="status-row"><span>Page</span><span><span id="pageNow">1</span> / 2</span></div><div class="status-row"><span>Attempts</span><span id="attemptStatus">0</span></div><label>Teacher Support <select id="supportSelect"><option>Independent</option><option>Small Prompt</option><option>Some Help</option><option>Heavy Help</option></select></label><label>Assessment Type <select id="assessmentSelect"><option>Formative</option><option>Summative</option></select></label><button id="helpBtn" type="button">Log Help</button><div class="checkgrid"><label><input class="quick" type="checkbox" value="Careful">Careful</label><label><input class="quick" type="checkbox" value="Prompt">Prompt</label><label><input class="quick" type="checkbox" value="Explain">Explain</label><label><input class="quick" type="checkbox" value="Retry">Retry</label></div><div class="checkgrid"><label><input class="strategy" type="checkbox" value="Counted">Counted</label><label><input class="strategy" type="checkbox" value="Used visual">Visual</label><label><input class="strategy" type="checkbox" value="Checked">Checked</label><label><input class="strategy" type="checkbox" value="Corrected">Corrected</label></div><label>Teacher Comments <textarea id="teacherComments" placeholder="Hidden teacher note"></textarea></label><label>Student Reflection <input id="reflectionInput" placeholder="Student reflection"></label><button id="pdfBtn" type="button">PDF Report</button><button id="snapBtn" type="button">PDF Snaps</button><button id="resetBtn" type="button">Reset</button></aside><main><header class="top"><div id="prompt" class="prompt"></div><div class="controls"><button id="backBtn" type="button">Back</button><button id="nextBtn" type="button">Next</button><button id="checkBtn" type="button">Check Page</button><button id="submitWork" class="submit" type="submit" form="netlifySubmissionForm">Submit</button></div></header><section class="work"><div class="panel"><div id="stage" class="stage"></div></div><div class="panel answer" id="answerPanel"></div><div id="feedback" class="feedback">Complete the page, then check it.</div></section></main></div>
+  <form id="netlifySubmissionForm" name="p26-aftercatpre2-submission" method="POST" data-netlify="true" netlify action="index.html" hidden><input type="hidden" name="form-name" value="p26-aftercatpre2-submission"><input type="hidden" name="project_id" value="P26-AFTERCATPRE2"><input type="hidden" name="student_id" id="netlifyStudent"><input type="hidden" name="grade" id="netlifyGrade"><input type="hidden" name="finished_at" id="netlifyFinishedAt"><input type="hidden" name="summary_json" id="netlifySummary"><input type="hidden" name="pages_json" id="netlifyPages"><input type="hidden" name="interactions_json" id="netlifyInteractions"></form>
+  <script>
+    const PROJECT_ID="AfterCatPre2",PROJECT_CODE="P26-AFTERCATPRE2",STORAGE_KEY="p26-aftercatpre2-v1",TEACHER_CODE="259";
+    const tasks=[
+      {"file":"aftercatpre2.html","name":"AfterCatPre2","code":"P26-AFTERCATPRE2","q":"Write the number that comes after 34.","correct":"35","opts":[],"visual":"<div class='card'>34, ___</div>"},
+      {"file":"aftercatpre2.html","name":"AfterCatPre2","code":"P26-AFTERCATPRE2","q":"Write the number that comes after 49.","correct":"50","opts":[],"visual":"<div class='card'>49, ___</div>"}
+    ];
+    const el={startScreen:id("startScreen"),studentCode:id("studentCode"),gradeSelect:id("gradeSelect"),startBtn:id("startBtn"),studentStatus:id("studentStatus"),gradeStatus:id("gradeStatus"),totalTimer:id("totalTimer"),pageTimer:id("pageTimer"),pageNow:id("pageNow"),attemptStatus:id("attemptStatus"),supportSelect:id("supportSelect"),assessmentSelect:id("assessmentSelect"),helpBtn:id("helpBtn"),teacherComments:id("teacherComments"),reflectionInput:id("reflectionInput"),pdfBtn:id("pdfBtn"),snapBtn:id("snapBtn"),resetBtn:id("resetBtn"),prompt:id("prompt"),backBtn:id("backBtn"),nextBtn:id("nextBtn"),checkBtn:id("checkBtn"),stage:id("stage"),answerPanel:id("answerPanel"),feedback:id("feedback"),netlifyForm:id("netlifySubmissionForm")};
+    let state=fresh(),pageStartedAt=Date.now(),lastAttemptAt=null;
+    localStorage.removeItem(STORAGE_KEY);
+    function id(x){return document.getElementById(x)}function fmt(s){s=Math.max(0,Math.floor(s||0));return String(Math.floor(s/60)).padStart(2,"0")+":"+String(s%60).padStart(2,"0")}function log(type,detail){state.interactions.push({at:new Date().toISOString(),page:1,type,detail})}
+    function makePage(i){return{page:i+1,answers:{},checked:false,correct:false,attempts:0,firstAttemptSeconds:null,timeToCorrectSeconds:null,timeBetweenAttempts:[],timeOnPageSeconds:0,teacherSupport:"Independent",assessmentType:"Formative",teacherComments:"",quickComments:[],strategyData:[],reflection:"",helpCount:0,helpHistory:[]}}function fresh(){return{studentId:"",grade:"1",pageIndex:0,startedAt:Date.now(),finishedAt:"",totalSeconds:0,pages:tasks.map((_,i)=>makePage(i)),interactions:[]}}function load(){try{let s=JSON.parse(localStorage.getItem(STORAGE_KEY));if(s&&(!Array.isArray(s.pages)||s.pages.length!==tasks.length))s=null;if(s&&typeof s.pageIndex!=="number")s.pageIndex=0;return s}catch(e){return null}}function store(){localStorage.setItem(STORAGE_KEY,JSON.stringify(state))}function page(){return state.pages[state.pageIndex]}function task(){return tasks[state.pageIndex]}function totalTime(){return Math.round((Date.now()-state.startedAt)/1000)}
+    function shuffledAnswerOpts(correct){
+      let c=Number(correct), vals=new Set([String(c)]);
+      let s=String(c);
+      if(s.length===2){
+        let rev=Number(s.split("").reverse().join(""));
+        if(rev!==c&&rev>=0&&rev<=99)vals.add(String(rev));
+      }
+      [c-10,c+10,c-9,c+9,c-5,c+5,c-2,c+2,c-1,c+1].forEach(n=>{if(n>=0&&n<=100)vals.add(String(n))});
+      for(let n=Math.max(0,c-18);vals.size<10&&n<=Math.min(100,c+18);n++){if(n!==c)vals.add(String(n))}
+      let arr=[...vals].slice(0,10);
+      for(let i=arr.length-1;i>0;i--){let j=Math.floor((i+1)*Math.abs(Math.sin((c+3)*(i+7))))%(i+1);[arr[i],arr[j]]=[arr[j],arr[i]]}
+      return arr;
+    }
+    function optionHtml(opts,val){return "<option value=''>Choose</option>"+opts.map(o=>"<option value='"+o+"' "+(String(val)===String(o)?"selected":"")+">"+o+"</option>").join("")}
+    function numberOpts(correct){return shuffledAnswerOpts(correct)}
+    function visual(){let t=task();if(t.visual==="apples")return "<div class='objects'>"+Array.from({length:24},()=>"<div class='apple'></div>").join("")+"</div><div class='medium'>6 groups of 4</div>";if(t.visual==="cookies")return "<div class='objects'>"+Array.from({length:24},()=>"<div class='cookie'></div>").join("")+"</div><div class='medium'>Share 24 among 6</div>";if(t.visual==="clock"){let nums=Array.from({length:12},(_,i)=>"<span class='clock-num' style='--n:"+(i+1)+"'>"+(i+1)+"</span>").join("");return "<div class='clock'>"+nums+"<div class='hand hour' style='transform:rotate(22.5deg)'></div><div class='hand minute' style='transform:rotate(180deg)'></div></div>"}if(t.visual==="hex")return "<div class='shape hex'></div><div class='medium'>6 sides</div>";if(t.visual==="rectangle")return "<div class='shape' style='width:260px;height:150px;background:#fff;display:grid;place-items:center'>8 cm by 5 cm</div>";if(t.visual==="fraction")return "<div class='rect'><div></div><div></div><div></div><div></div></div>";if(t.visual==="bars")return "<div class='bars'>"+[["Soccer",9],["Hockey",6],["Basketball",12],["Swimming",3]].map(r=>"<div class='barrow'><div>"+r[0]+"</div><div class='track'><div class='fill' style='width:"+(r[1]*8)+"%'></div></div><div>"+r[1]+"</div></div>").join("")+"</div>";if(t.visual==="spinner")return "<div class='spinner'></div><div class='medium'>4 equal sections</div>";if(PROJECT_ID==="AfterCatPre2"){let p=page(),base=(t.q.match(/after (\d+)/)||[])[1]||"";let hasAnswer=!!p.answers.answer;let ans=hasAnswer?p.answers.answer:"??";let empty=hasAnswer?"":" empty";return "<div class='card'>"+base+", <span class='selected-answer-chip"+empty+"'>"+ans+"</span></div>"}return t.visual||"<div class='card'>Solve</div>"}
+    function answerHtml(){let p=page(),t=task();if(t.type==="sequence")return "<div class='medium'>Fill the blanks</div><div class='row'>"+t.seq.map((n,i)=>"<select data-field='slot"+i+"'>"+optionHtml(numberOpts(n),p.answers["slot"+i])+"</select>").join("")+"</div>";if(t.type==="order")return "<div class='medium'>Least to greatest</div><div class='row'>"+[0,1,2,3].map(i=>"<select data-field='slot"+i+"'>"+optionHtml(t.opts,p.answers["slot"+i])+"</select>").join("")+"</div>";if(t.type==="input")return "<label>Estimate in cm<input data-field='answer' value='"+(p.answers.answer||"")+"' placeholder='____ cm'></label>";return "<label>Answer<select data-field='answer'>"+optionHtml((t.opts&&t.opts.length)?t.opts:shuffledAnswerOpts(t.correct),p.answers.answer)+"</select></label>"}
+    function correctAnswer(i=state.pageIndex){let t=tasks[i];if(t.type==="sequence")return t.seq.map(String);if(t.type==="order")return t.correct;if(t.type==="input")return "Teacher reviewed estimate";return t.correct}
+    function isCorrect(i=state.pageIndex){let p=state.pages[i],t=tasks[i];if(t.type==="input")return String(p.answers.answer||"").trim().length>0;if(t.type==="sequence")return t.seq.every((n,j)=>String(p.answers["slot"+j])===String(n));if(t.type==="order")return t.correct.every((n,j)=>String(p.answers["slot"+j])===String(n));return String(p.answers.answer)===String(t.correct)}
+    function saveAdmin(){let p=page();p.teacherSupport=el.supportSelect.value;p.assessmentType=el.assessmentSelect.value;p.teacherComments=el.teacherComments.value;p.quickComments=[...document.querySelectorAll(".quick:checked")].map(x=>x.value);p.strategyData=[...document.querySelectorAll(".strategy:checked")].map(x=>x.value);p.reflection=el.reflectionInput.value}function hydrateAdmin(){let p=page();el.supportSelect.value=p.teacherSupport;el.assessmentSelect.value=p.assessmentType;el.teacherComments.value=p.teacherComments;el.reflectionInput.value=p.reflection;document.querySelectorAll(".quick").forEach(c=>c.checked=p.quickComments.includes(c.value));document.querySelectorAll(".strategy").forEach(c=>c.checked=p.strategyData.includes(c.value))}function saveTime(){page().timeOnPageSeconds+=(Date.now()-pageStartedAt)/1000;pageStartedAt=Date.now()}
+    function render(){let p=page(),t=task();p.answers=p.answers||{};el.startScreen.classList.toggle("hidden",!!state.studentId);el.studentStatus.textContent=state.studentId||"--";el.gradeStatus.textContent=state.grade?("Grade "+state.grade):"--";el.pageNow.textContent=state.pageIndex+1;el.attemptStatus.textContent=p.attempts;el.prompt.textContent=t.q;el.backBtn.disabled=state.pageIndex===0;el.nextBtn.disabled=state.pageIndex===tasks.length-1;hydrateAdmin();el.stage.innerHTML=visual();el.answerPanel.innerHTML="<div class='medium'>Answer Pad</div>"+answerHtml()+"<div class='mini'>Project ID: "+PROJECT_CODE+"</div>";document.querySelectorAll("[data-field]").forEach(x=>x.addEventListener("change",()=>{p.answers[x.dataset.field]=x.value;p.checked=false;log("changed_value",{field:x.dataset.field,value:x.value});render();store()}));el.feedback.textContent=p.checked?(p.correct?"This page is ready.":"Try again. Check the question and answer."):"Complete the page, then check it."}
+    function checkPage(){saveAdmin();let p=page(),now=(Date.now()-state.startedAt)/1000;p.attempts++;if(p.firstAttemptSeconds===null)p.firstAttemptSeconds=now;if(lastAttemptAt!==null)p.timeBetweenAttempts.push(Math.round(now-lastAttemptAt));lastAttemptAt=now;p.correct=isCorrect();p.checked=true;if(p.correct&&p.timeToCorrectSeconds===null)p.timeToCorrectSeconds=now;log("check_page",{correct:p.correct,answer:p.answers,correctAnswer:correctAnswer()});render();store()}
+    function fillNetlify(){saveAdmin();saveTime();state.totalSeconds=totalTime();id("netlifyStudent").value=state.studentId;id("netlifyGrade").value=state.grade;id("netlifyFinishedAt").value=state.finishedAt;let pages=state.pages.map((p,i)=>({...p,question:tasks[i].q,correct:isCorrect(i),correctAnswer:correctAnswer(i)}));let complete=pages.filter(p=>p.correct).length;id("netlifySummary").value=JSON.stringify({project:PROJECT_ID,projectId:PROJECT_CODE,studentId:state.studentId,grade:state.grade,totalSeconds:state.totalSeconds,totalTime:fmt(state.totalSeconds),pagesComplete:complete,pageCount:tasks.length,finishedAt:state.finishedAt});id("netlifyPages").value=JSON.stringify(pages);id("netlifyInteractions").value=JSON.stringify(state.interactions);store()}function submitWork(event){
+  try{if(typeof saveAdminFields==='function')saveAdminFields()}catch(e){}
+  try{if(typeof saveAdminData==='function')saveAdminData()}catch(e){}
+  try{if(typeof updateAdmin==='function')updateAdmin()}catch(e){}
+  try{if(typeof savePageAdmin==='function')savePageAdmin()}catch(e){}
+  try{if(typeof syncAnswers==='function')syncAnswers()}catch(e){}
+  try{if(typeof saveAdminInput==='function'&&typeof el==='object'&&el.teacherComments)saveAdminInput({target:el.teacherComments})}catch(e){}
+  try{if(typeof page==='function'&&typeof el==='object'){
+    const p=page();
+    if(el.answerSelect)p.answer=el.answerSelect.value;
+    if(el.tensSelect)p.tens=el.tensSelect.value;
+    if(el.onesSelect)p.ones=el.onesSelect.value;
+    if(el.tensSelect&&el.onesSelect)p.answerRecord=(p.tens||'?')+' tens and '+(p.ones||'?')+' ones';
+  }}catch(e){}
+  if(!confirm('Are you sure you want to submit this work?')){
+    if(event&&event.preventDefault)event.preventDefault();
+    try{if(typeof recordInteraction==='function')recordInteraction('submit-cancelled',{reason:'student-cancelled'});else if(typeof log==='function')log('submit-cancelled',{reason:'student-cancelled'})}catch(e){}
+    try{if(typeof store==='function')store();else if(typeof saveState==='function')saveState()}catch(e){}
+    return;
+  }
+  let submittedFile='';
+  try{
+    submittedFile=(location.pathname.split('/').pop()||'').toLowerCase();
+    if(submittedFile&&!submittedFile.endsWith('.html'))submittedFile+='.html';
+    const key='p26-pre2-submitted-projects';
+    const data=JSON.parse(localStorage.getItem(key)||'{}');
+    data[submittedFile]={file:submittedFile,submittedAt:new Date().toISOString(),submittedLocal:new Date().toLocaleString()};
+    localStorage.setItem(key,JSON.stringify(data));
+    sessionStorage.setItem('p26-pre2-last-submitted-project',submittedFile);
+    const form=(event&&event.target&&event.target.id==='netlifySubmissionForm')?event.target:document.getElementById('netlifySubmissionForm');
+    if(form)form.setAttribute('action','index.html?finished='+encodeURIComponent(submittedFile)+'#finished');
+  }catch(e){}
+  try{state.finishedAt=new Date().toISOString()}catch(e){}
+  try{if(typeof recordInteraction==='function')recordInteraction('submit',{confirmed:true,submittedFile});else if(typeof log==='function')log('submit',{confirmed:true,submittedFile})}catch(e){}
+  try{if(typeof fillNetlifyFields==='function')fillNetlifyFields();else if(typeof fillNetlify==='function')fillNetlify('');else if(typeof syncHiddenFields==='function')syncHiddenFields()}catch(e){}
+  try{if(typeof store==='function')store();else if(typeof saveState==='function')saveState()}catch(e){}
+}
+    function reportHtml(kind){fillNetlify();let rows=state.pages.map((p,i)=>"<tr><td>"+(i+1)+"</td><td>"+tasks[i].q+"</td><td>"+(isCorrect(i)?"Yes":"No")+"</td><td>"+fmt(p.timeOnPageSeconds)+"</td><td>"+p.attempts+"</td><td>"+JSON.stringify(p.answers)+"</td><td>"+JSON.stringify(correctAnswer(i))+"</td><td>"+p.teacherSupport+"</td><td>"+p.assessmentType+"</td><td>"+(p.teacherComments||"")+"</td></tr>").join("");return "<!doctype html><html><head><title>"+PROJECT_ID+" "+kind+"</title><style>body{font-family:Arial,sans-serif}table{border-collapse:collapse;width:100%;font-size:11px}td,th{border:1px solid #333;padding:4px;vertical-align:top}</style></head><body><h1>"+PROJECT_ID+" "+kind+"</h1><p>Student: "+state.studentId+" | Grade: "+state.grade+" | Total time: "+fmt(state.totalSeconds)+" | Finished: "+(state.finishedAt||"Not submitted")+"</p><table><thead><tr><th>Page</th><th>Question</th><th>Correct?</th><th>Time</th><th>Attempts</th><th>Answer</th><th>Correct Answer</th><th>Support</th><th>Type</th><th>Teacher Comments</th></tr></thead><tbody>"+rows+"</tbody></table><p>Interactions recorded: "+state.interactions.length+"</p></body></html>"}
+    function openReport(kind,codeNeeded){if(codeNeeded&&prompt("Enter teacher code to view report.")!==TEACHER_CODE)return;let w=window.open("","_blank");w.document.write(reportHtml(kind));w.document.close();log("pdf_report",{kind});store()}function tick(){let p=page();el.totalTimer.textContent=fmt(totalTime());el.pageTimer.textContent=fmt((p.timeOnPageSeconds||0)+(Date.now()-pageStartedAt)/1000)}
+    function goPage(delta){saveAdmin();saveTime();state.pageIndex=Math.max(0,Math.min(tasks.length-1,state.pageIndex+delta));lastAttemptAt=null;pageStartedAt=Date.now();render();store()}el.startBtn.addEventListener("click",()=>{const chosen=el.studentCode.value.trim();if(!chosen){alert("Press a student number first.");return;}state.studentId=chosen;state.grade=el.gradeSelect.value;log("start",{studentId:state.studentId,grade:state.grade});render();store()});el.backBtn.addEventListener("click",()=>goPage(-1));el.nextBtn.addEventListener("click",()=>goPage(1));el.checkBtn.addEventListener("click",checkPage);el.helpBtn.addEventListener("click",()=>{let p=page();p.helpCount++;p.helpHistory.push({at:new Date().toISOString(),support:el.supportSelect.value});log("teacher_help",{count:p.helpCount});store()});[...document.querySelectorAll(".quick,.strategy")].forEach(c=>c.addEventListener("change",()=>{saveAdmin();log("changed_value",{field:c.className,value:c.value,checked:c.checked});store()}));[el.supportSelect,el.assessmentSelect,el.teacherComments,el.reflectionInput].forEach(x=>x.addEventListener("change",()=>{saveAdmin();log("changed_value",{field:x.id,value:x.value});store()}));el.pdfBtn.addEventListener("click",()=>openReport("PDP Report",true));el.snapBtn.addEventListener("click",()=>openReport("PDF Snaps",true));el.resetBtn.addEventListener("click",()=>{if(confirm("Reset "+PROJECT_ID+" work?")){localStorage.removeItem(STORAGE_KEY);state=fresh();pageStartedAt=Date.now();render()}});el.netlifyForm.addEventListener("submit",submitWork);setInterval(tick,1000);render();
+  </script>
+
+<script>
+(function(){
+  const P26_SHARED_CODES=["1847","2963","3750","4286","5391","6074","7128","8539","9146","1205","2384","3497","4561","5682","6793","7814","8925","9036","1472","2583","3694","4705","5816","6927"];
+  window.P26_SHARED_CODES=P26_SHARED_CODES;
+  function record(type,detail){try{if(typeof recordInteraction==='function')recordInteraction(type,detail);else if(typeof log==='function')log(type,detail)}catch(e){}}
+  function buildEntryButtons(){
+    const input=document.getElementById('studentCode');
+    const start=document.getElementById('startScreen');
+    if(!input||!start)return;
+    input.readOnly=true;
+    input.placeholder='Press a number button';
+    let grid=document.getElementById('codeGrid')||start.querySelector('.code-grid')||start.querySelector('.p26-code-grid');
+    if(!grid){grid=document.createElement('div');grid.id='codeGrid';grid.className='code-grid p26-code-grid';const card=start.querySelector('.start-card')||start.firstElementChild||start;card.appendChild(grid)}
+    grid.className=(grid.className||'')+' code-grid p26-code-grid';
+    const P26_CODE_EMOJIS=['&#128049;','&#11088;','&#128663;','&#127822;','&#127752;','&#9917;','&#127880;','&#128640;','&#127850;','&#127775;','&#129513;','&#127922;','&#127804;','&#127936;','&#128161;','&#127881;','&#128690;','&#127853;','&#128681;','&#127826;','&#127912;','&#128214;','&#127774;','&#127873;'];
+    grid.innerHTML=P26_SHARED_CODES.map((code,i)=>'<button type="button" class="code-choice p26-code-choice '+(input.value===code?'selected':'')+'" data-code="'+code+'"><span>'+code+'</span><small class="code-emoji">'+P26_CODE_EMOJIS[i%P26_CODE_EMOJIS.length]+'</small></button>').join('');
+    grid.querySelectorAll('[data-code]').forEach(btn=>btn.addEventListener('click',()=>{input.value=btn.dataset.code;record('student-code-button',{code:btn.dataset.code});buildEntryButtons()}));
+  }
+  window.renderCodes=buildEntryButtons;
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',buildEntryButtons);else buildEntryButtons();
+})();
+</script>
+
+
+<script>
+(function(){
+  const STORE_KEY='p26-page-date-times:'+location.pathname;
+  function pad(n){return String(n).padStart(2,'0')}
+  function localStamp(d=new Date()){return {iso:d.toISOString(),date:d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate()),time:pad(d.getHours())+':'+pad(d.getMinutes())+':'+pad(d.getSeconds()),local:d.toLocaleString()}}
+  function read(){try{return JSON.parse(localStorage.getItem(STORE_KEY)||'{}')}catch(e){return {}}}
+  function write(v){try{localStorage.setItem(STORE_KEY,JSON.stringify(v))}catch(e){}}
+  function currentPageNumber(){
+    const ids=['pageNow','pageStatus','pageNumber','currentPage'];
+    for(const id of ids){const el=document.getElementById(id);if(el){const m=String(el.textContent||el.value||'').match(/\d+/);if(m)return Number(m[0])}}
+    const sel=document.querySelector('#pageSelect, select[id*="page"], select[id*="Page"]');
+    if(sel&&sel.value!==''&&!Number.isNaN(Number(sel.value)))return Number(sel.value)+1;
+    return 1;
+  }
+  function stampPage(){
+    const n=currentPageNumber();
+    const all=read();
+    const now=localStamp();
+    const k='page'+n;
+    all[k]=all[k]||{page:n,firstSeenIso:now.iso,firstSeenLocal:now.local,firstSeenDate:now.date,firstSeenTime:now.time};
+    all[k].lastSeenIso=now.iso;all[k].lastSeenLocal=now.local;all[k].lastSeenDate=now.date;all[k].lastSeenTime=now.time;
+    write(all);
+  }
+  function enrichNetlifyDates(){
+    stampPage();
+    const now=localStamp();
+    const all=read();
+    const pagesInput=document.getElementById('netlifyPages')||document.querySelector('input[name="pages_json"]');
+    if(pagesInput&&pagesInput.value){
+      try{
+        const pages=JSON.parse(pagesInput.value);
+        if(Array.isArray(pages)){
+          pagesInput.value=JSON.stringify(pages.map((p,i)=>{
+            const rec=all['page'+(i+1)]||{};
+            return Object.assign({},p,{pageDate:rec.firstSeenDate||now.date,pageTime:rec.firstSeenTime||now.time,pageFirstSeenIso:rec.firstSeenIso||now.iso,pageFirstSeenLocal:rec.firstSeenLocal||now.local,pageLastSeenIso:rec.lastSeenIso||now.iso,pageLastSeenLocal:rec.lastSeenLocal||now.local,pageSubmittedIso:now.iso,pageSubmittedLocal:now.local});
+          }));
+        }
+      }catch(e){}
+    }
+    const summaryInput=document.getElementById('netlifySummary')||document.querySelector('input[name="summary_json"]');
+    if(summaryInput&&summaryInput.value){
+      try{
+        const summary=JSON.parse(summaryInput.value);
+        summary.submissionDate=now.date;summary.submissionTime=now.time;summary.submissionIso=now.iso;summary.submissionLocal=now.local;summary.pageDateTimes=all;
+        summaryInput.value=JSON.stringify(summary);
+      }catch(e){}
+    }
+    const interactionsInput=document.getElementById('netlifyInteractions')||document.querySelector('input[name="interactions_json"]');
+    if(interactionsInput&&interactionsInput.value){
+      try{const interactions=JSON.parse(interactionsInput.value);if(Array.isArray(interactions)){interactions.push({at:now.iso,type:'page-date-time-record',detail:{submissionLocal:now.local,pageDateTimes:all}});interactionsInput.value=JSON.stringify(interactions)}}catch(e){}
+    }
+  }
+  window.p26StampPageDateTimes=stampPage;
+  window.p26EnrichNetlifyDateTimes=enrichNetlifyDates;
+  document.addEventListener('click',stampPage,true);
+  document.addEventListener('change',stampPage,true);
+  document.addEventListener('input',stampPage,true);
+  setInterval(stampPage,2000);
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',stampPage);else stampPage();
+  const attach=()=>{const form=document.getElementById('netlifySubmissionForm');if(form&&!form.dataset.p26DateTimeHook){form.dataset.p26DateTimeHook='1';form.addEventListener('submit',enrichNetlifyDates)}};
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',attach);else attach();
+})();
+</script>
+
+<script>
+(function(){
+  function hideGradeEntry(){
+    ['gradeSelect','gradeLevel','grade'].forEach(id=>{
+      const el=document.getElementById(id);
+      if(!el)return;
+      if(!el.value)el.value='1';
+      const label=el.closest('label');
+      if(label)label.style.setProperty('display','none','important');
+      el.style.setProperty('display','none','important');
+    });
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',hideGradeEntry);else hideGradeEntry();
+})();
+</script>
+
+<script>
+(function(){
+  function markSubmittedProject(){
+    try{
+      const key='p26-pre2-submitted-projects';
+      const file=(location.pathname.split('/').pop()||'').toLowerCase();
+      if(!file)return;
+      const data=JSON.parse(localStorage.getItem(key)||'{}');
+      data[file]={file,submittedAt:new Date().toISOString(),submittedLocal:new Date().toLocaleString()};
+      localStorage.setItem(key,JSON.stringify(data));
+    }catch(e){}
+  }
+  const attach=()=>{const form=document.getElementById('netlifySubmissionForm');if(form&&!form.dataset.p26LandingShadeHook){form.dataset.p26LandingShadeHook='1';form.addEventListener('submit',markSubmittedProject)}};
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',attach);else attach();
+})();
+</script>
+
+<script id="p26UniformEntryScript">
+(function(){
+  const CODES=['1847','2963','3750','4286','5391','6074','7128','8539','9146','1205','2384','3497','4561','5682','6793','7814','8925','9036','1472','2583','3694','4705','5816','6927'];
+  const EMOJIS=['&#128049;','&#11088;','&#128663;','&#127822;','&#127752;','&#9917;','&#127880;','&#128640;','&#127850;','&#127775;','&#129513;','&#127922;','&#127804;','&#127936;','&#128161;','&#127881;','&#128690;','&#127853;','&#128681;','&#127826;','&#127912;','&#128214;','&#127774;','&#127873;'];
+  function projectName(){const h=document.querySelector('#startScreen h1');return (h&&h.textContent.trim())||document.title||'Cat Project'}
+  function recordPress(code){try{if(typeof recordInteraction==='function')recordInteraction('student-code-button',{code});else if(typeof log==='function')log('student-code-button',{code})}catch(e){}}
+  function normalize(){
+    const screen=document.getElementById('startScreen'); if(!screen) return;
+    let card=screen.querySelector('.start-card')||screen.querySelector('form')||screen.firstElementChild; if(!card) return;
+    const input=document.getElementById('studentCode')||document.getElementById('studentIdInput'); if(!input) return;
+    const oldStart=card.querySelector('button[type="submit"],button.primary,#startBtn');
+    const isForm=card.tagName&&card.tagName.toLowerCase()==='form';
+    const title=projectName();
+    const grade=document.getElementById('gradeSelect')||document.getElementById('gradeLevel')||document.getElementById('grade')||document.getElementById('gradeInput');
+    if(grade){ if(!grade.value) grade.value='1'; const gl=grade.closest('label')||grade; gl.classList.add('p26-entry-hidden'); }
+    input.readOnly=true; input.placeholder='Press a number';
+    card.classList.add('p26-uniform-entry');
+    const titleBar=document.createElement('div'); titleBar.className='p26-entry-title';
+    titleBar.innerHTML='<img src="big-bear-math-logo.png" alt="Big Bear Math"><h1>'+title+'</h1>';
+    const left=document.createElement('div'); left.className='p26-entry-left';
+    const label=document.createElement('label'); label.textContent='Student Code'; label.appendChild(input);
+    const startBtn=document.createElement('button');
+    startBtn.id='startBtn'; startBtn.className='p26-start-button'; startBtn.textContent='Start'; startBtn.type=isForm?'submit':'button'; startBtn.addEventListener('click',function(e){if(!input.value){e.preventDefault();e.stopImmediatePropagation();alert('Press a number first.');}});
+    if(!isForm){
+      startBtn.addEventListener('click',()=>{
+        if(!input.value){alert('Press a number first.');return;}
+        if(oldStart && !oldStart.matches('.p26-code-choice,.code-choice,.code-button')){oldStart.click();return;}
+        if(typeof window.start==='function'){window.start();return;}
+        if(typeof window.begin==='function'){window.begin();return;}
+        if(typeof window.startProject==='function'){window.startProject();return;}
+        if(typeof window.startWork==='function'){window.startWork();return;}
+      });
+    }
+    left.appendChild(label); left.appendChild(startBtn);
+    let grid=document.getElementById('codeGrid');
+    if(!grid){grid=document.createElement('div'); grid.id='codeGrid';}
+    grid.className='p26-code-grid code-grid'; grid.setAttribute('aria-label','Choose your student number');
+    card.innerHTML=''; card.appendChild(titleBar); card.appendChild(left); card.appendChild(grid);
+    function render(){
+      grid.innerHTML=CODES.map((code,i)=>'<button type="button" class="p26-code-choice '+(input.value===code?'selected':'')+'" data-code="'+code+'"><span>'+code+'</span><small class="code-emoji">'+EMOJIS[i%EMOJIS.length]+'</small></button>').join('');
+      grid.querySelectorAll('[data-code]').forEach(btn=>btn.addEventListener('click',()=>{input.value=btn.dataset.code;input.dispatchEvent(new Event('input',{bubbles:true}));recordPress(btn.dataset.code);render()}));
+    }
+    window.renderCodes=render; render();
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',normalize);else normalize();
+})();
+</script>
+<script id="p26Pre2HardeningScript">
+(function(){
+  function codeValue(){const input=document.getElementById('studentCode')||document.getElementById('studentIdInput');return input?input.value.trim():''}
+  function visibleStart(){const s=document.getElementById('startScreen');return s && !s.classList.contains('hidden') && getComputedStyle(s).display!=='none'}
+  function requireCode(event){if(visibleStart()&&!codeValue()){if(event){event.preventDefault();event.stopImmediatePropagation&&event.stopImmediatePropagation();}alert('Press a student number first.');return false}return true}
+  document.addEventListener('submit',function(e){const form=e.target;if(form && (form.id==='startForm'||(form.closest&&form.closest('#startScreen'))))requireCode(e)},true);
+  document.addEventListener('click',function(e){const b=e.target.closest&&e.target.closest('#startBtn,.p26-start-button,button.primary');if(b&&visibleStart()&&!codeValue())requireCode(e)},true);
+  ['start','begin','startProject','startWork'].forEach(function(name){try{const old=window[name];if(typeof old==='function'&&!old.__p26NeedsCode){const wrapped=function(){if(!requireCode())return;return old.apply(this,arguments)};wrapped.__p26NeedsCode=true;window[name]=wrapped;}}catch(e){}});
+  function shuffle(arr){for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]]}return arr}
+  function isAnswerSelect(sel){if(!sel||sel.dataset.p26NoShuffle)return false;const id=(sel.id||'').toLowerCase();if(/page|grade|support|assessment|teacher|quick|strategy/.test(id))return false;if(sel.closest('aside,.admin'))return false;return sel.options&&sel.options.length>3;}
+  function randomizeSelect(sel){if(!isAnswerSelect(sel))return;const selected=sel.value;const opts=[...sel.options];const keep=opts.filter(o=>o.value===''||/^(choose|\?|select)/i.test(o.textContent.trim()));const pool=opts.filter(o=>!keep.includes(o));const sig=pool.map(o=>o.value+'|'+o.textContent).join('~');if(sel.dataset.p26ShuffleSig===sig)return;shuffle(pool);sel.innerHTML='';keep.forEach(o=>sel.appendChild(o));pool.forEach(o=>sel.appendChild(o));sel.value=selected;sel.dataset.p26ShuffleSig=sig;}
+  function randomizeDropdowns(){document.querySelectorAll('select').forEach(randomizeSelect)}
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',randomizeDropdowns);else randomizeDropdowns();
+  new MutationObserver(()=>randomizeDropdowns()).observe(document.documentElement,{childList:true,subtree:true});
+})();
+</script>
+<script id="p26Pre2DirectEntryRepair">
+(function(){
+  function screen(){return document.getElementById('startScreen')}
+  function visibleStart(){const s=screen();return s && !s.classList.contains('hidden') && getComputedStyle(s).display!=='none'}
+  function inputEl(){return document.getElementById('studentCode')||document.getElementById('studentIdInput')||document.querySelector('#startScreen input[type="text"],#startScreen input:not([type])')}
+  function setText(ids,value){ids.forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=value})}
+  function openProject(code){
+    const input=inputEl(); if(input) input.value=code;
+    try{
+      if(typeof state!=='undefined' && state){
+        state.studentId=code;
+        state.student=code;
+        state.studentCode=code;
+        state.grade='1';
+        if(!state.startedAt) state.startedAt=(typeof nowIso==='function'?nowIso():Date.now());
+        if('lastTick' in state) state.lastTick=Date.now();
+      }
+    }catch(e){}
+    try{if(typeof pageStartedAt!=='undefined')pageStartedAt=Date.now();}catch(e){}
+    try{if(typeof log==='function')log('start',{studentId:code,grade:'1'});}catch(e){}
+    try{if(typeof recordInteraction==='function')recordInteraction('start',{studentId:code,grade:'1'});}catch(e){}
+    const s=screen();
+    if(s){s.classList.add('hidden');s.style.setProperty('display','none','important')}
+    ['app','mainApp','workArea'].forEach(id=>{const el=document.getElementById(id);if(el){el.classList.remove('hidden');el.style.removeProperty('display')}});
+    const shell=document.querySelector('.shell'); if(shell){shell.classList.remove('hidden');shell.style.removeProperty('display')}
+    setText(['studentStatus','studentReadout','studentIdStatus'],code);
+    setText(['gradeStatus','gradeReadout'],'Grade 1');
+    if(typeof render==='function')render();
+    if(s){s.classList.add('hidden');s.style.setProperty('display','none','important')}
+    ['app','mainApp','workArea'].forEach(id=>{const el=document.getElementById(id);if(el){el.classList.remove('hidden');el.style.removeProperty('display')}});
+    if(shell){shell.classList.remove('hidden');shell.style.removeProperty('display')}
+    try{if(typeof store==='function')store();}catch(e){}
+    try{if(typeof save==='function')save();}catch(e){}
+    try{if(typeof saveState==='function')saveState();}catch(e){}
+  }
+  function attemptStart(event){
+    const isSubmit=event && event.type==='submit';
+    const btn=!isSubmit && event.target.closest&&event.target.closest('#startBtn,.p26-start-button,button.primary,#startScreen button[type="submit"]');
+    if(!visibleStart() || (!isSubmit && !btn)) return;
+    const input=inputEl();
+    const code=input?String(input.value||'').trim():'';
+    if(!code){if(event){event.preventDefault();event.stopImmediatePropagation&&event.stopImmediatePropagation();}alert('Press a student number first.');return;}
+    if(event){event.preventDefault();event.stopImmediatePropagation&&event.stopImmediatePropagation();}
+    try{openProject(code)}catch(err){alert('This project could not start: '+err.message)}
+  }
+  document.addEventListener('click',attemptStart,true);
+  document.addEventListener('submit',function(event){const s=screen();if(s&&event.target&&s.contains(event.target))attemptStart(event)},true);
+})();
+</script>
+</body>
+</html>

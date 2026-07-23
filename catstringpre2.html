@@ -1,0 +1,1604 @@
+﻿<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CatStringPre2</title>
+  <style>
+    :root {
+      --ink: #0b1014;
+      --muted: #4c5d6e;
+      --line: #222;
+      --blue: #254f78;
+      --blue-soft: #e8f4fc;
+      --cream: #fff7c9;
+      --paper: #fff;
+      --green: #16734d;
+      --red: #b33434;
+      --shadow: 0 14px 34px rgba(14, 22, 31, 0.12);
+      font-family: "Trebuchet MS", "Segoe UI", system-ui, sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--ink);
+      background: linear-gradient(135deg, #f8fbfd, #edf6fb 65%, #fff9db);
+    }
+
+    main {
+      width: min(1220px, calc(100% - 20px));
+      margin: 0 auto;
+      padding: 18px 0 32px;
+    }
+
+    button, input, select, textarea {
+      font: inherit;
+    }
+
+    button {
+      min-height: 44px;
+      border: 2px solid var(--line);
+      border-radius: 8px;
+      padding: 8px 12px;
+      background: var(--paper);
+      color: var(--ink);
+      cursor: pointer;
+    }
+
+    button:hover { background: #eef7fc; }
+    button:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    .primary {
+      color: #fff;
+      border-color: var(--blue);
+      background: var(--blue);
+    }
+
+    .primary:hover { background: #1d405f; }
+
+    input, select, textarea {
+      width: 100%;
+      min-height: 42px;
+      border: 2px solid var(--blue);
+      border-radius: 8px;
+      padding: 8px 10px;
+      background: var(--paper);
+      color: var(--ink);
+    }
+
+    textarea {
+      min-height: 72px;
+      resize: vertical;
+    }
+
+    .start-screen {
+      position: fixed;
+      inset: 0;
+      z-index: 10;
+      display: grid;
+      place-items: center;
+      padding: 16px;
+      background: rgba(248, 251, 253, 0.96);
+    }
+
+    .start-card {
+      width: min(520px, 100%);
+      padding: 22px;
+      border: 4px solid var(--line);
+      border-radius: 8px;
+      background: var(--paper);
+      box-shadow: var(--shadow);
+    }
+
+    .start-card h1 {
+      margin: 0 0 8px;
+      font-size: clamp(2rem, 6vw, 3rem);
+      font-weight: 500;
+    }
+
+    .start-card p {
+      margin: 0 0 16px;
+      color: var(--muted);
+    }
+
+    .field-grid {
+      display: grid;
+      gap: 12px;
+    }
+
+    .field-grid label, .admin-panel label {
+      display: grid;
+      gap: 5px;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .shell {
+      display: grid;
+      grid-template-columns: 286px minmax(0, 1fr);
+      gap: 16px;
+      align-items: start;
+    }
+
+    .admin-panel {
+      position: sticky;
+      top: 10px;
+      display: grid;
+      gap: 12px;
+      padding: 14px;
+      border: 4px solid var(--line);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.96);
+      box-shadow: var(--shadow);
+    }
+
+    .admin-panel h2 {
+      margin: 0;
+      font-size: 1.2rem;
+      font-weight: 500;
+    }
+
+    .status-list {
+      display: grid;
+      gap: 6px;
+      font-size: 0.94rem;
+    }
+
+    .status-list div {
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      border-bottom: 1px solid #d4e5ef;
+      padding-bottom: 4px;
+    }
+
+    .status-list strong {
+      min-width: 72px;
+      text-align: right;
+      font-weight: 500;
+    }
+
+    .barcode {
+      display: grid;
+      gap: 5px;
+      padding: 8px;
+      border: 2px solid var(--line);
+      border-radius: 8px;
+      background: var(--paper);
+      text-align: center;
+      font-size: 0.9rem;
+      font-weight: 500;
+    }
+
+    .barcode-bars {
+      height: 34px;
+      background:
+        repeating-linear-gradient(90deg,
+          var(--line) 0 3px,
+          transparent 3px 6px,
+          var(--line) 6px 9px,
+          transparent 9px 14px,
+          var(--line) 14px 16px,
+          transparent 16px 22px);
+    }
+
+    .timer-value {
+      min-width: 64px;
+      font-family: "Segoe UI Mono", Consolas, monospace;
+      font-variant-numeric: tabular-nums;
+      letter-spacing: 0;
+    }
+
+    .check-list {
+      display: grid;
+      gap: 7px;
+      font-size: 0.9rem;
+      color: var(--ink);
+    }
+
+    .check-list label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--ink);
+    }
+
+    .check-list input {
+      width: 18px;
+      min-height: 18px;
+      padding: 0;
+    }
+
+    .admin-actions {
+      display: grid;
+      gap: 8px;
+    }
+
+    .topbar {
+      display: grid;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .title-band {
+      border: 5px solid var(--line);
+      background: var(--cream);
+      text-align: center;
+      padding: 14px 10px;
+    }
+
+    .title-band h1 {
+      margin: 0;
+      font-size: clamp(2rem, 4vw, 3.5rem);
+      font-weight: 500;
+      letter-spacing: 0;
+    }
+
+    .subtitle {
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: end;
+      border: 4px solid var(--line);
+      padding: 12px;
+      background: var(--paper);
+      box-shadow: var(--shadow);
+    }
+
+    .nav label {
+      flex: 1 1 170px;
+      display: grid;
+      gap: 5px;
+      color: var(--muted);
+    }
+
+    .page-pill {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 44px;
+      padding: 8px 12px;
+      border: 2px solid var(--blue);
+      border-radius: 8px;
+      background: #f6fcff;
+      font-weight: 500;
+    }
+
+    .nav button {
+      flex: 1 1 120px;
+    }
+
+    .activity {
+      display: grid;
+      gap: 12px;
+    }
+
+    .bank, .pads {
+      border: 5px solid var(--line);
+      background: var(--paper);
+      box-shadow: var(--shadow);
+    }
+
+    .bank {
+      border-bottom-color: #4b80ac;
+      padding: 18px;
+    }
+
+    .bank h2, .pads h2 {
+      margin: 0 0 18px;
+      text-align: center;
+      font-size: clamp(1.6rem, 3vw, 2.4rem);
+      font-weight: 500;
+    }
+
+    .number-bank {
+      min-height: 118px;
+      display: grid;
+      grid-template-columns: repeat(6, minmax(92px, 1fr));
+      gap: 14px;
+      align-items: stretch;
+      padding: 4px;
+      border-radius: 8px;
+    }
+
+    .number-bank.is-over {
+      outline: 4px solid rgba(37, 79, 120, 0.24);
+      background: #eff8fe;
+    }
+
+    .number-tile {
+      min-height: 84px;
+      border: 5px solid var(--line);
+      border-radius: 10px;
+      background: var(--cream);
+      font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 500;
+      display: grid;
+      place-items: center;
+      user-select: none;
+      touch-action: none;
+      box-shadow: inset 0 -4px 0 rgba(0, 0, 0, 0.08);
+    }
+
+    .number-tile:active { transform: scale(0.98); }
+
+    .pads {
+      padding: 18px;
+    }
+
+    .landing-grid {
+      display: grid;
+      grid-template-columns: repeat(6, minmax(92px, 1fr));
+      gap: 14px;
+    }
+
+    .pad {
+      min-height: 150px;
+      border: 4px dashed var(--blue);
+      border-radius: 10px;
+      background: var(--blue-soft);
+      display: grid;
+      grid-template-rows: 1fr;
+      gap: 8px;
+      padding: 10px;
+      text-align: center;
+    }
+
+    .pad.is-over {
+      outline: 4px solid rgba(37, 79, 120, 0.22);
+      background: #dff0fa;
+    }
+
+    .pad-content {
+      min-height: 74px;
+      display: grid;
+      place-items: center;
+    }
+
+    .pad-empty {
+      color: #465a70;
+      font-size: clamp(1.2rem, 3vw, 1.7rem);
+      font-weight: 500;
+    }
+
+    .pad .number-tile {
+      width: 100%;
+      min-height: 74px;
+      font-size: clamp(1.8rem, 4vw, 2.7rem);
+    }
+
+    .feedback {
+      min-height: 48px;
+      display: flex;
+      align-items: center;
+      border: 4px solid var(--line);
+      background: var(--paper);
+      padding: 10px 14px;
+      color: var(--muted);
+      font-weight: 500;
+    }
+
+    .feedback.good { color: var(--green); }
+    .feedback.try { color: var(--red); }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    @media (max-width: 1060px) {
+      .shell { grid-template-columns: 1fr; }
+      .admin-panel { position: static; }
+      .number-bank, .landing-grid { grid-template-columns: repeat(3, minmax(92px, 1fr)); }
+    }
+
+    @media (max-width: 620px) {
+      main {
+        width: min(100% - 12px, 1220px);
+        padding-top: 10px;
+      }
+
+      .title-band { padding: 10px 8px; }
+      .nav > * { flex: 1 1 145px; }
+      .bank, .pads { padding: 10px; }
+      .number-bank, .landing-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
+      }
+      .number-tile {
+        min-height: 70px;
+        border-width: 4px;
+      }
+      .pad { min-height: 132px; }
+    }
+  
+  
+    /* Pre2 responsive safety layer: keeps phone/tablet layouts from overlapping or squeezing. */
+    @media (max-width: 900px){
+      html,body{width:100%;max-width:100%;overflow-x:hidden!important}
+      body{min-width:0!important}
+      .layout,.shell,.main,.work,.board,.stage,.panel,.answer,.top,.controls,.start-row,.bank,.pad,.wrap,.grid{max-width:100%!important;min-width:0!important}
+      .layout,.shell{display:grid!important;grid-template-columns:1fr!important;padding:6px!important;gap:8px!important}
+      aside,.admin{order:2!important;max-height:none!important;overflow:visible!important}
+      main,.main{width:100%!important;min-width:0!important}
+      .work,.board{display:grid!important;grid-template-columns:1fr!important;min-height:0!important;overflow:visible!important}
+      .top,.controls,.prompt-line,header{flex-wrap:wrap!important;align-items:flex-start!important}
+      .prompt,.prompt-line>*,header>div{min-width:0!important;max-width:100%!important}
+      .controls{width:100%!important}
+      .controls button,.controls select,.controls label{flex:1 1 130px!important;min-width:0!important}
+      button,select,input,textarea{max-width:100%!important}
+      .start{overflow:auto!important;place-items:start center!important;padding:8px!important}
+      .start-card{width:min(96vw,900px)!important;max-height:none!important;overflow:visible!important;padding:10px!important}
+      .code-grid,.car-grid{grid-template-columns:repeat(6,minmax(0,1fr))!important}
+      .code-choice,.car-choice{min-width:0!important}
+      .bank{grid-template-columns:1fr!important}
+      .bank-grid{grid-template-columns:repeat(auto-fit,minmax(92px,1fr))!important}
+      .landing,.dropzone,.stage{min-height:220px!important}
+      table{display:block!important;width:100%!important;overflow-x:auto!important;white-space:normal!important}
+      img{max-width:100%;height:auto}
+    }
+    @media (max-width: 560px){
+      .layout,.shell{padding:4px!important}
+      .admin,aside,.top,.work,.panel,.bank,.pad{padding:6px!important}
+      .question,.prompt{font-size:clamp(18px,6vw,24px)!important}
+      .controls button,.controls select,.controls label{flex:1 1 100%!important}
+      .code-grid,.car-grid{grid-template-columns:repeat(4,minmax(0,1fr))!important}
+      .code-choice img,.car-choice img{display:none!important}
+      .hood-code,.code-choice span{font-size:18px!important}
+    }
+    /* P26 shared entry numbers: same student-code numbers on every Pre2 entry screen. */
+    .code-grid,.p26-code-grid{display:grid!important;grid-template-columns:repeat(6,minmax(0,1fr))!important;gap:7px!important;margin-top:6px!important;width:100%!important;max-height:none!important;overflow:visible!important}
+    .code-choice,.p26-code-choice{border:3px solid #232323!important;background:#fffdf1!important;border-radius:14px!important;min-height:56px!important;height:56px!important;display:grid!important;grid-template-rows:1fr auto!important;place-items:center!important;cursor:pointer!important;padding:2px 4px!important;box-shadow:3px 3px 0 #9fd2f1!important}
+    .code-choice img,.p26-code-choice img{display:none!important}
+    .code-choice span,.p26-code-choice span{position:static!important;font-size:clamp(20px,2.2vw,30px)!important;line-height:1!important;font-weight:900!important;color:#101820!important;text-shadow:none!important;letter-spacing:0!important}
+    .code-choice .code-emoji,.p26-code-choice .code-emoji{font-size:16px!important;line-height:1!important;margin-top:1px!important}
+    .code-choice.selected,.p26-code-choice.selected{outline:4px solid #10b45d!important;background:#eaffef!important;border-radius:14px!important}
+    @media(max-width:640px){.code-grid,.p26-code-grid{grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:5px!important}.code-choice,.p26-code-choice{min-height:48px!important;height:48px!important}.code-choice span,.p26-code-choice span{font-size:18px!important}.code-choice .code-emoji,.p26-code-choice .code-emoji{font-size:13px!important}}
+
+    /* P26 landscape entry screen: wide, compact, no scrolling to find numbers. */
+    .start{place-items:start center!important;align-items:start!important;overflow:hidden!important;padding:8px!important}
+    .start-card,#startForm{width:min(1180px,98vw)!important;max-width:98vw!important;min-height:0!important;max-height:96vh!important;display:grid!important;grid-template-columns:1.15fr 2.85fr!important;grid-template-rows:auto auto!important;gap:8px 14px!important;align-items:start!important;padding:10px 14px!important;overflow:hidden!important}
+    .start-card h1,#startForm h1{font-size:clamp(24px,3vw,38px)!important;margin:0!important;line-height:1.05!important}
+    .start-title{grid-column:1/-1!important;display:flex!important;align-items:center!important;gap:12px!important;margin:0!important}
+    .start-title .logo,.start-card .logo,.start-card .brand-logo{width:64px!important;height:64px!important;object-fit:contain!important;margin:0!important}
+    .start-card>label,.start-row{grid-column:1!important;width:100%!important;margin:0!important;display:grid!important;grid-template-columns:1fr!important;gap:6px!important;align-self:start!important}
+    .start-row label{display:grid!important;gap:4px!important}
+    .start-card input,.start-card select,#startForm input,#startForm select{min-height:40px!important;padding:6px 8px!important;font-size:18px!important}
+    .start-card button#startBtn,.start-card .primary,#startForm .primary{grid-column:1!important;min-height:48px!important;font-size:20px!important;padding:6px 10px!important}
+    .code-grid,.p26-code-grid,#codeGrid{grid-column:2!important;grid-row:2!important;align-self:start!important;grid-template-columns:repeat(6,minmax(0,1fr))!important;gap:7px!important;margin:0!important;max-height:calc(96vh - 96px)!important;overflow:hidden!important}
+    .code-choice,.p26-code-choice,.code-button{height:54px!important;min-height:54px!important;border-radius:12px!important;padding:2px 4px!important}
+    .code-choice span,.p26-code-choice span,.code-button span{font-size:clamp(20px,2vw,28px)!important}
+    .code-choice .code-emoji,.p26-code-choice .code-emoji,.code-button .code-emoji{font-size:15px!important}
+    @media(max-width:760px){.start{overflow:auto!important}.start-card,#startForm{grid-template-columns:1fr!important;max-height:none!important;overflow:visible!important}.code-grid,.p26-code-grid,#codeGrid{grid-column:1!important;grid-row:auto!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;max-height:none!important}.code-choice,.p26-code-choice,.code-button{height:48px!important;min-height:48px!important}.start-title .logo,.start-card .logo,.start-card .brand-logo{width:48px!important;height:48px!important}}
+
+    /* P26 entry field order: ID, grade, start on the left; choices on the right. */
+    .start-card>h1{grid-column:1/-1!important;grid-row:1!important;margin:0!important;text-align:left!important}
+    .start-card>label:first-of-type{grid-column:1!important;grid-row:2!important}
+    .start-card>label:nth-of-type(2){grid-column:1!important;grid-row:3!important}
+    .start-card>button,#startBtn{grid-column:1!important;grid-row:4!important;align-self:start!important}
+    .start-row{grid-column:1!important;grid-row:2!important;display:grid!important;grid-template-columns:1fr!important;gap:6px!important;align-self:start!important}
+    .start-row label:first-of-type{grid-row:1!important}
+    .start-row label:nth-of-type(2){grid-row:2!important}
+    .start-row button,.start-row .primary{grid-row:3!important}
+    #codeGrid,.code-grid,.p26-code-grid,#carGrid,.car-grid{grid-column:2!important;grid-row:2 / span 4!important;align-self:start!important}
+    @media(max-width:760px){.start-card>h1,.start-card>label:first-of-type,.start-card>label:nth-of-type(2),.start-card>button,#startBtn,.start-row,#codeGrid,.code-grid,.p26-code-grid,#carGrid,.car-grid{grid-column:1!important;grid-row:auto!important}}
+
+    /* P26 Pre2 entry screen: hide grade selector from students while keeping default grade data. */
+    .start-card label:has(#gradeSelect),.start-card label:has(#gradeLevel),.start-card label:has(#grade),#startForm label:has(#gradeSelect),#startForm label:has(#gradeLevel),#startForm label:has(#grade){display:none!important}
+    #gradeSelect,#gradeLevel,#grade{display:none!important}
+    .start-row{grid-template-rows:auto auto!important}.field-grid{grid-column:1!important;display:grid!important;gap:8px!important}.field-grid label{display:grid!important;gap:4px!important}
+    .start-row button,.start-row .primary{grid-row:2!important}
+    .start-card>button,#startBtn{grid-row:3!important}
+
+  .p26-entry-left .p26-start-button{min-height:68px!important;border:4px solid #232323!important;background:#c7f4c9!important;box-shadow:4px 4px 0 #9fd2f1!important;font-size:32px!important;font-weight:900!important;color:#101820!important;border-radius:12px!important;cursor:pointer!important;display:grid!important;place-items:center!important;padding:8px 12px!important;width:100%!important;line-height:1!important}
+  .p26-entry-left .p26-start-button:disabled{opacity:.55!important;cursor:not-allowed!important}
+  #codeGrid.p26-code-grid .p26-code-choice{font-family:"Century Gothic","Trebuchet MS",Arial,sans-serif!important}
+
+</style>
+
+<style id="p26UniformEntryStyle">
+  #startScreen.start,#startScreen.start-screen,.start-screen#startScreen{position:fixed!important;inset:0!important;background:#eef8ff!important;display:grid!important;place-items:start center!important;z-index:9999!important;overflow:hidden!important;padding:8px!important}
+  #startScreen.hidden{display:none!important}
+  #startScreen[style*="display: none"]{display:none!important}
+  .p26-uniform-entry{width:min(1180px,98vw)!important;max-width:98vw!important;max-height:96vh!important;overflow:hidden!important;border:4px solid #232323!important;background:#fff!important;box-shadow:8px 8px 0 #9fd2f1!important;border-radius:8px!important;padding:10px 14px!important;display:grid!important;grid-template-columns:minmax(240px,330px) 1fr!important;grid-template-rows:auto 1fr!important;gap:10px 16px!important;align-items:start!important}
+  .p26-entry-title{grid-column:1/-1!important;display:flex!important;align-items:center!important;gap:12px!important;margin:0!important;border-bottom:3px solid #232323!important;padding-bottom:6px!important}
+  .p26-entry-title img{width:58px!important;height:58px!important;object-fit:contain!important;flex:0 0 auto!important}
+  .p26-entry-title h1{margin:0!important;text-align:left!important;font-size:clamp(24px,3vw,38px)!important;line-height:1!important;color:#123f68!important}
+  .p26-entry-left{grid-column:1!important;grid-row:2!important;display:grid!important;gap:8px!important;align-self:start!important}
+  .p26-entry-left label{display:grid!important;gap:5px!important;font-size:18px!important;font-weight:900!important}
+  .p26-entry-left input{width:100%!important;min-height:56px!important;border:3px solid #232323!important;background:#fff!important;padding:8px!important;font-size:26px!important;font-weight:900!important;text-align:center!important}
+  .p26-entry-left button{min-height:56px!important;border:3px solid #232323!important;background:#c7f4c9!important;padding:8px 12px!important;font-size:24px!important;font-weight:900!important;cursor:pointer!important;box-shadow:3px 3px 0 #9fd2f1!important}
+  #codeGrid.p26-code-grid{grid-column:2!important;grid-row:2!important;display:grid!important;grid-template-columns:repeat(6,minmax(0,1fr))!important;gap:7px!important;margin:0!important;align-self:start!important;max-height:calc(96vh - 94px)!important;overflow:hidden!important}
+  #codeGrid.p26-code-grid .p26-code-choice{height:54px!important;min-height:54px!important;border:3px solid #232323!important;background:#fffdf1!important;border-radius:12px!important;display:grid!important;grid-template-rows:1fr auto!important;place-items:center!important;cursor:pointer!important;padding:2px 4px!important;box-shadow:3px 3px 0 #9fd2f1!important}
+  #codeGrid.p26-code-grid .p26-code-choice.selected{outline:4px solid #10b45d!important;background:#eaffef!important}
+  #codeGrid.p26-code-grid .p26-code-choice span{font-size:clamp(20px,2vw,28px)!important;line-height:1!important;font-weight:900!important;color:#101820!important;text-shadow:none!important;letter-spacing:0!important}
+  #codeGrid.p26-code-grid .code-emoji{font-size:15px!important;line-height:1!important;margin-top:1px!important}
+  .p26-entry-hidden{display:none!important}
+  #startScreen .car-grid,#startScreen .car-choice{display:none!important}
+  @media(max-width:760px){#startScreen.start,#startScreen.start-screen,.start-screen#startScreen{overflow:auto!important}.p26-uniform-entry{grid-template-columns:1fr!important;max-height:none!important;overflow:visible!important}.p26-entry-left,#codeGrid.p26-code-grid{grid-column:1!important;grid-row:auto!important}#codeGrid.p26-code-grid{grid-template-columns:repeat(4,minmax(0,1fr))!important;max-height:none!important}.p26-entry-title img{width:46px!important;height:46px!important}}
+</style>
+</head>
+<body>
+<script>
+(function(){
+  const params=new URLSearchParams(window.location.search);
+  if(params.get('fresh')!=='1') return;
+  const keep='p26-pre2-submitted-projects';
+  const keys=[];
+  for(let i=0;i<localStorage.length;i++) keys.push(localStorage.key(i));
+  keys.forEach(k=>{
+    const low=String(k||'').toLowerCase();
+    if(k!==keep && (low.includes('pre2') || low.includes('catmaze'))) localStorage.removeItem(k);
+  });
+  history.replaceState(null,'',window.location.pathname);
+})();
+</script>
+
+  <div class="start-screen" id="startScreen">
+    <form class="start-card" id="startForm">
+      <h1>CatStringPre2</h1>
+      <p>P26 student start screen. Enter details to begin or resume saved work.</p>
+      <div class="field-grid">
+        <label>
+          Student ID
+          <input id="studentIdInput" autocomplete="off" required>
+        </label>
+        <label>
+          Grade
+          <input id="gradeInput" autocomplete="off" placeholder="Grade">
+        </label>
+        <button type="submit" class="primary">Start Project</button>
+      </div>
+    </form>
+  </div>
+
+  <main>
+    <div class="shell">
+      <aside class="admin-panel" aria-label="P26 teacher admin and status panel">
+        <h2>P26 Admin / Status</h2>
+        <div class="status-list">
+          <div><span>Student</span><strong id="studentStatus">Not started</strong></div>
+          <div><span>Grade</span><strong id="gradeStatus">-</strong></div>
+          <div><span>Project</span><strong id="projectStatus">CatStringPre2</strong></div>
+          <div><span>Total Timer</span><strong class="timer-value" id="totalTimer">00:00</strong></div>
+          <div><span>Page Timer</span><strong class="timer-value" id="pageTimer">00:00</strong></div>
+          <div><span>Score</span><strong id="scoreStatus">0 / 10</strong></div>
+          <div><span>Attempts</span><strong id="attemptStatus">0</strong></div>
+          <div><span>Help</span><strong id="helpStatus">0</strong></div>
+        </div>
+        <div class="barcode" aria-label="Project barcode CatStringPre2">
+          <div class="barcode-bars"></div>
+          <span>CatStringPre2</span>
+        </div>
+
+        <label>
+          Teacher Support Level
+          <select id="supportLevel">
+            <option value="">None</option>
+            <option>Independent</option>
+            <option>Prompt</option>
+            <option>Guided</option>
+            <option>Modeled</option>
+          </select>
+        </label>
+
+        <label>
+          Assessment Type
+          <select id="assessmentType">
+            <option>Formative</option>
+            <option>Summative</option>
+          </select>
+        </label>
+
+        <div>
+          <span class="subtitle">Quick Teacher Comments</span>
+          <div class="check-list" id="quickComments">
+            <label><input type="checkbox" value="Ordered independently">Ordered independently</label>
+            <label><input type="checkbox" value="Compared hundreds">Compared hundreds</label>
+            <label><input type="checkbox" value="Needed place-value support">Needed place-value support</label>
+            <label><input type="checkbox" value="Corrected after feedback">Corrected after feedback</label>
+          </div>
+        </div>
+
+        <div>
+          <span class="subtitle">Strategy Data</span>
+          <div class="check-list" id="strategyChecks">
+            <label><input type="checkbox" value="Compared hundreds">Compared hundreds</label>
+            <label><input type="checkbox" value="Compared tens">Compared tens</label>
+            <label><input type="checkbox" value="Compared ones">Compared ones</label>
+            <label><input type="checkbox" value="Checked final order">Checked final order</label>
+          </div>
+        </div>
+
+        <label>
+          Teacher Comments
+          <textarea id="teacherComments" placeholder="Teacher notes for this page"></textarea>
+        </label>
+
+        <label>
+          Student Reflection
+          <textarea id="reflectionInput" placeholder="Student reflection"></textarea>
+        </label>
+
+        <div class="admin-actions">
+          <button type="button" id="logHelp">Log Help</button>
+          <button type="button" id="pdfReport">PDF Report</button>
+          <button type="button" id="pdfSnaps">PDF Snaps</button>
+        </div>
+      </aside>
+
+      <section>
+        <div class="topbar">
+          <div class="title-band">
+            <h1 id="storyTitle">Put the 6 numbers in order from least to greatest.</h1>
+          </div>
+          <nav class="nav" aria-label="Page controls">
+            <span class="page-pill" id="pageDisplay">Page 1 of 1</span>
+            <label>
+              Go to Page
+              <select id="pageSelect"></select>
+            </label>
+            <button type="button" id="backPage">Back</button>
+            <button type="button" id="nextPage">Next</button>
+            <button type="button" id="checkPage" class="primary">Check Page</button>
+            <button type="submit" id="submitWork" form="netlifySubmissionForm">Submit</button>
+            <button type="button" id="resetWork">Reset</button>
+          </nav>
+        </div>
+
+        <section class="activity" aria-label="CatString ordering activity">
+          <section class="bank" aria-label="Number bank">
+            <h2>Number Bank</h2>
+            <div class="number-bank" id="numberBank"></div>
+          </section>
+
+          <section class="pads" aria-label="Landing pads">
+            <h2>Landing Pads</h2>
+            <div class="landing-grid" id="landingGrid"></div>
+          </section>
+
+          <div class="feedback" id="feedback" aria-live="polite">Drag each number to a landing pad.</div>
+        </section>
+      </section>
+    </div>
+
+    <form id="netlifySubmissionForm" name="p26-catstringpre2-submission" method="POST" data-netlify="true" netlify action="index.html" style="position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden;">
+      <input type="hidden" name="form-name" value="p26-catstringpre2-submission">
+      <input type="hidden" id="netlifyStudentId" name="student_id">
+      <input type="hidden" id="netlifyGrade" name="grade">
+      <input type="hidden" id="netlifyProtocol" name="protocol">
+      <input type="hidden" id="netlifyProjectId" name="project_id">
+      <input type="hidden" id="netlifySummary" name="summary_json">
+      <input type="hidden" id="netlifyPages" name="pages_json">
+      <input type="hidden" id="netlifyInteractions" name="interactions_json">
+      <input type="hidden" id="netlifyScore" name="score">
+      <input type="hidden" id="netlifyFinishedAt" name="finished_at">
+    </form>
+
+    <p class="sr-only" id="liveStatus" aria-live="polite"></p>
+  </main>
+
+  <script>
+    const PROTOCOL_NAME = "P26";
+    const PROJECT_ID = "CatStringPre2";
+    const DATA_VERSION = "catstringpre2-10-to-50-v1";
+    const STORAGE_KEY = "p26-catstringpre2-10-50";
+    const LEGACY_STORAGE_KEY = "p26-catstringpre2";
+    const TEACHER_CODE = "259";
+    const pagesData = [
+      [44, 12, 31, 18, 50, 25]
+    ];
+
+    const state = {
+      started: false,
+      studentId: "",
+      grade: "",
+      pageIndex: 0,
+      startedAt: null,
+      finishedAt: null,
+      dataVersion: DATA_VERSION,
+      totalElapsed: 0,
+      lastTick: Date.now(),
+      pages: pagesData.map((numbers, index) => makePage(index, numbers)),
+      interactions: []
+    };
+
+    const el = {
+      startScreen: document.getElementById("startScreen"),
+      startForm: document.getElementById("startForm"),
+      studentIdInput: document.getElementById("studentIdInput"),
+      gradeInput: document.getElementById("gradeInput"),
+      studentStatus: document.getElementById("studentStatus"),
+      gradeStatus: document.getElementById("gradeStatus"),
+      projectStatus: document.getElementById("projectStatus"),
+      totalTimer: document.getElementById("totalTimer"),
+      pageTimer: document.getElementById("pageTimer"),
+      scoreStatus: document.getElementById("scoreStatus"),
+      attemptStatus: document.getElementById("attemptStatus"),
+      helpStatus: document.getElementById("helpStatus"),
+      supportLevel: document.getElementById("supportLevel"),
+      assessmentType: document.getElementById("assessmentType"),
+      quickComments: document.getElementById("quickComments"),
+      strategyChecks: document.getElementById("strategyChecks"),
+      teacherComments: document.getElementById("teacherComments"),
+      reflectionInput: document.getElementById("reflectionInput"),
+      logHelp: document.getElementById("logHelp"),
+      pdfReport: document.getElementById("pdfReport"),
+      pdfSnaps: document.getElementById("pdfSnaps"),
+      storyTitle: document.getElementById("storyTitle"),
+      pageDisplay: document.getElementById("pageDisplay"),
+      pageSelect: document.getElementById("pageSelect"),
+      backPage: document.getElementById("backPage"),
+      nextPage: document.getElementById("nextPage"),
+      checkPage: document.getElementById("checkPage"),
+      submitWork: document.getElementById("submitWork"),
+      resetWork: document.getElementById("resetWork"),
+      numberBank: document.getElementById("numberBank"),
+      landingGrid: document.getElementById("landingGrid"),
+      feedback: document.getElementById("feedback"),
+      liveStatus: document.getElementById("liveStatus"),
+      netlifyStudentId: document.getElementById("netlifyStudentId"),
+      netlifyGrade: document.getElementById("netlifyGrade"),
+      netlifyProtocol: document.getElementById("netlifyProtocol"),
+      netlifyProjectId: document.getElementById("netlifyProjectId"),
+      netlifySummary: document.getElementById("netlifySummary"),
+      netlifyPages: document.getElementById("netlifyPages"),
+      netlifyInteractions: document.getElementById("netlifyInteractions"),
+      netlifyScore: document.getElementById("netlifyScore"),
+      netlifyFinishedAt: document.getElementById("netlifyFinishedAt"),
+      netlifyForm: document.querySelector('form[data-netlify="true"]')
+    };
+
+    function makePage(index, numbers) {
+      return {
+        pageNumber: index + 1,
+        numbers,
+        correctAnswer: [...numbers].sort((a, b) => a - b),
+        bank: [...numbers],
+        pads: Array(6).fill(null),
+        answerHistory: [],
+        correctAnswerRecorded: [...numbers].sort((a, b) => a - b),
+        isCorrect: false,
+        score: 0,
+        attempts: 0,
+        firstAttemptTime: null,
+        timeToCorrect: null,
+        timeAfterCorrect: 0,
+        timeBetweenAttempts: [],
+        lastAttemptTime: null,
+        pageTime: 0,
+        teacherSupportLevel: "",
+        teacherHelpCount: 0,
+        teacherHelpHistory: [],
+        assessmentType: "Formative",
+        teacherComments: "",
+        quickComments: [],
+        strategies: [],
+        reflection: "",
+        wordBankClicks: [],
+        storyTextClicks: [],
+        pageInteractions: []
+      };
+    }
+
+    function currentPage() {
+      return state.pages[state.pageIndex];
+    }
+
+    function formatTime(seconds) {
+      const safe = Math.max(0, Math.round(seconds || 0));
+      const minutes = Math.floor(safe / 60);
+      const rest = safe % 60;
+      return `${String(minutes).padStart(2, "0")}:${String(rest).padStart(2, "0")}`;
+    }
+
+    function checkedValues(container) {
+      return [...container.querySelectorAll("input:checked")].map((input) => input.value);
+    }
+
+    function setCheckedValues(container, values) {
+      const selected = new Set(values || []);
+      container.querySelectorAll("input").forEach((input) => {
+        input.checked = selected.has(input.value);
+      });
+    }
+
+    function saveAdminFields() {
+      const page = currentPage();
+      page.teacherSupportLevel = el.supportLevel.value;
+      page.assessmentType = el.assessmentType.value;
+      page.teacherComments = el.teacherComments.value;
+      page.reflection = el.reflectionInput.value;
+      page.quickComments = checkedValues(el.quickComments);
+      page.strategies = checkedValues(el.strategyChecks);
+    }
+
+    function recordInteraction(type, detail = {}) {
+      const page = currentPage();
+      const event = {
+        at: new Date().toISOString(),
+        totalSeconds: Math.round(state.totalElapsed),
+        pageNumber: page.pageNumber,
+        type,
+        detail
+      };
+      state.interactions.push(event);
+      page.pageInteractions.push(event);
+      if (type === "word-bank-click") page.wordBankClicks.push(event);
+      if (type === "story-text-click") page.storyTextClicks.push(event);
+      saveState();
+    }
+
+    function saveState() {
+      syncHiddenFields();
+      localStorage.setItem(STORAGE_KEY, JSON.stringify({
+        ...state,
+        dataVersion: DATA_VERSION,
+        lastTick: Date.now()
+      }));
+    }
+
+    function loadState() {
+      localStorage.removeItem(LEGACY_STORAGE_KEY);
+      const saved = localStorage.getItem(STORAGE_KEY);
+      if (!saved) return;
+      try {
+        const data = JSON.parse(saved);
+        if (data.dataVersion !== DATA_VERSION) {
+          localStorage.removeItem(STORAGE_KEY);
+          return;
+        }
+        const savedMatchesCurrentNumbers = (data.pages || []).every((page, index) =>
+          JSON.stringify(page.numbers || []) === JSON.stringify(pagesData[index])
+        );
+        if (!savedMatchesCurrentNumbers) {
+          localStorage.removeItem(STORAGE_KEY);
+          return;
+        }
+        Object.assign(state, data);
+        const savedPagesAreInRange = (data.pages || []).every((page) =>
+          [...(page.numbers || []), ...(page.bank || []), ...(page.pads || []).filter((value) => value !== null)]
+            .every((value) => Number(value) >= 1 && Number(value) <= 50)
+        );
+        if (!savedPagesAreInRange) {
+          localStorage.removeItem(STORAGE_KEY);
+          state.pages = pagesData.map((numbers, index) => makePage(index, numbers));
+          return;
+        }
+        state.pages = pagesData.map((numbers, index) => {
+          const freshPage = makePage(index, numbers);
+          if (!savedPagesAreInRange || !data.pages || !data.pages[index]) return freshPage;
+          return {
+            ...freshPage,
+            ...data.pages[index],
+            numbers: freshPage.numbers,
+            correctAnswer: freshPage.correctAnswer,
+            correctAnswerRecorded: freshPage.correctAnswerRecorded
+          };
+        });
+        state.lastTick = Date.now();
+        el.studentIdInput.value = state.studentId || "";
+        el.gradeInput.value = state.grade || "";
+      } catch (error) {
+        console.warn("Saved CatStringPre2 work could not be loaded.", error);
+      }
+    }
+
+    function makeTile(value, source, index) {
+      const tile = document.createElement("button");
+      tile.type = "button";
+      tile.className = "number-tile";
+      tile.textContent = value;
+      tile.draggable = true;
+      tile.dataset.value = value;
+      tile.dataset.source = source;
+      tile.dataset.index = index;
+      tile.setAttribute("aria-label", `Number ${value}`);
+      tile.addEventListener("click", () => {
+        recordInteraction(source === "bank" ? "word-bank-click" : "click", { value, source, index });
+      });
+      tile.addEventListener("dragstart", (event) => {
+        event.dataTransfer.setData("text/plain", JSON.stringify({ value, source, index }));
+        recordInteraction("drag-start", { value, source, index });
+      });
+      return tile;
+    }
+
+    function renderBank() {
+      const page = currentPage();
+      el.numberBank.innerHTML = "";
+      page.bank.forEach((value, index) => {
+        el.numberBank.appendChild(makeTile(value, "bank", index));
+      });
+      if (page.bank.length === 0) {
+        const empty = document.createElement("div");
+        empty.className = "subtitle";
+        empty.textContent = "Drag a placed number back here to remove it.";
+        el.numberBank.appendChild(empty);
+      }
+    }
+
+    function renderPads() {
+      const page = currentPage();
+      el.landingGrid.innerHTML = "";
+      page.pads.forEach((value, index) => {
+        const pad = document.createElement("div");
+        pad.className = "pad";
+        pad.dataset.index = index;
+        pad.innerHTML = `<div class="pad-content"></div>`;
+        const content = pad.querySelector(".pad-content");
+        if (value === null) {
+          const label = document.createElement("div");
+          label.className = "pad-empty";
+          label.textContent = "Drop";
+          content.appendChild(label);
+        } else {
+          content.appendChild(makeTile(value, "pad", index));
+        }
+        addPadEvents(pad);
+        el.landingGrid.appendChild(pad);
+      });
+    }
+
+    function addPadEvents(pad) {
+      pad.addEventListener("dragover", (event) => {
+        event.preventDefault();
+        pad.classList.add("is-over");
+      });
+      pad.addEventListener("dragleave", () => pad.classList.remove("is-over"));
+      pad.addEventListener("drop", (event) => {
+        event.preventDefault();
+        pad.classList.remove("is-over");
+        const data = parseDrag(event);
+        if (!data) return;
+        moveToPad(data, Number(pad.dataset.index));
+      });
+    }
+
+    function addBankDropEvents() {
+      el.numberBank.addEventListener("dragover", (event) => {
+        event.preventDefault();
+        el.numberBank.classList.add("is-over");
+      });
+      el.numberBank.addEventListener("dragleave", () => el.numberBank.classList.remove("is-over"));
+      el.numberBank.addEventListener("drop", (event) => {
+        event.preventDefault();
+        el.numberBank.classList.remove("is-over");
+        const data = parseDrag(event);
+        if (!data || data.source !== "pad") return;
+        const page = currentPage();
+        const value = page.pads[data.index];
+        if (value !== null) {
+          page.pads[data.index] = null;
+          page.bank.push(value);
+          page.isCorrect = false;
+          page.score = 0;
+          recordInteraction("drop-back-to-bank", { value, fromPad: data.index + 1 });
+          renderActivity();
+          updateFeedback("Number returned to the bank.");
+        }
+      });
+    }
+
+    function parseDrag(event) {
+      try {
+        return JSON.parse(event.dataTransfer.getData("text/plain"));
+      } catch {
+        return null;
+      }
+    }
+
+    function moveToPad(data, targetIndex) {
+      const page = currentPage();
+      let value = Number(data.value);
+      if (data.source === "bank") {
+        page.bank.splice(data.index, 1);
+      } else if (data.source === "pad") {
+        const previous = page.pads[data.index];
+        page.pads[data.index] = null;
+        value = previous;
+      }
+
+      const displaced = page.pads[targetIndex];
+      page.pads[targetIndex] = value;
+      if (displaced !== null) page.bank.push(displaced);
+      page.isCorrect = false;
+      page.score = 0;
+      page.answerHistory.push({ at: new Date().toISOString(), pads: [...page.pads], action: "changed" });
+      recordInteraction("drop", { value, from: data.source, fromIndex: data.index, toPad: targetIndex + 1, displaced });
+      renderActivity();
+      updateFeedback("Keep placing the numbers from least to greatest.");
+    }
+
+    function renderActivity() {
+      renderBank();
+      renderPads();
+      updateStatus();
+      saveState();
+    }
+
+    function buildPageSelect() {
+      el.pageSelect.innerHTML = "";
+      pagesData.forEach((numbers, index) => {
+        const option = document.createElement("option");
+        option.value = index;
+        option.textContent = `Page ${index + 1}`;
+        el.pageSelect.appendChild(option);
+      });
+    }
+
+    function setAdminFields(page) {
+      el.supportLevel.value = page.teacherSupportLevel || "";
+      el.assessmentType.value = page.assessmentType || "Formative";
+      el.teacherComments.value = page.teacherComments || "";
+      el.reflectionInput.value = page.reflection || "";
+      setCheckedValues(el.quickComments, page.quickComments);
+      setCheckedValues(el.strategyChecks, page.strategies);
+    }
+
+    function renderPage() {
+      const page = currentPage();
+      el.pageDisplay.textContent = `Page ${page.pageNumber} of ${pagesData.length}`;
+      el.pageSelect.value = state.pageIndex;
+      el.backPage.disabled = state.pageIndex === 0;
+      el.nextPage.disabled = state.pageIndex === pagesData.length - 1;
+      setAdminFields(page);
+      renderActivity();
+      updateFeedback(page.isCorrect ? "Correct. The numbers are in order." : "Drag each number to a landing pad.");
+    }
+
+    function enterPage(index) {
+      saveAdminFields();
+      state.pageIndex = Math.max(0, Math.min(pagesData.length - 1, Number(index)));
+      renderPage();
+      recordInteraction("page-navigation", { pageNumber: currentPage().pageNumber });
+    }
+
+    function checkPage() {
+      const page = currentPage();
+      const now = Date.now();
+      page.attempts += 1;
+      if (page.firstAttemptTime === null) page.firstAttemptTime = Math.round(page.pageTime);
+      if (page.lastAttemptTime) page.timeBetweenAttempts.push(Math.round((now - page.lastAttemptTime) / 1000));
+      page.lastAttemptTime = now;
+      const complete = page.pads.every((value) => value !== null);
+      const correct = complete && page.pads.every((value, index) => value === page.correctAnswer[index]);
+      page.answerHistory.push({ at: new Date().toISOString(), pads: [...page.pads], complete, correct });
+      page.isCorrect = correct;
+      page.score = correct ? 1 : 0;
+      if (correct && page.timeToCorrect === null) page.timeToCorrect = Math.round(page.pageTime);
+      if (correct) {
+        updateFeedback("Correct. The numbers are in order.", "good");
+      } else if (!complete) {
+        updateFeedback("Fill all 6 landing pads before checking.", "try");
+      } else {
+        updateFeedback("Not yet. Try ordering from the smallest number to the largest.", "try");
+      }
+      recordInteraction("check-page", { complete, correct, pads: [...page.pads], attempts: page.attempts });
+      updateStatus();
+      saveState();
+    }
+
+    function updateFeedback(message, kind = "") {
+      el.feedback.className = `feedback ${kind}`.trim();
+      el.feedback.textContent = message;
+      el.liveStatus.textContent = message;
+    }
+
+    function updateStatus() {
+      saveAdminFields();
+      const page = currentPage();
+      const score = state.pages.reduce((total, item) => total + item.score, 0);
+      el.studentStatus.textContent = state.studentId || "Not started";
+      el.gradeStatus.textContent = state.grade || "-";
+      el.projectStatus.textContent = PROJECT_ID;
+      el.totalTimer.textContent = formatTime(state.totalElapsed);
+      el.pageTimer.textContent = formatTime(page.pageTime);
+      el.scoreStatus.textContent = `${score} / ${pagesData.length}`;
+      el.attemptStatus.textContent = page.attempts;
+      el.helpStatus.textContent = page.teacherHelpCount;
+      syncHiddenFields();
+    }
+
+    function summaryData() {
+      return {
+        protocol: PROTOCOL_NAME,
+        projectId: PROJECT_ID,
+        studentId: state.studentId,
+        grade: state.grade,
+        startedAt: state.startedAt ? new Date(state.startedAt).toISOString() : "",
+        finishedAt: state.finishedAt || "",
+        totalTime: Math.round(state.totalElapsed),
+        score: state.pages.reduce((total, page) => total + page.score, 0),
+        pageCount: pagesData.length
+      };
+    }
+
+    function syncHiddenFields() {
+      state.pages.forEach(page=>{
+        const complete=page.pads.every(value=>value!==null);
+        const correct=complete&&page.pads.every((value,index)=>value===page.correctAnswer[index]);
+        page.isCorrect=correct;
+        page.score=correct?1:0;
+        page.answerRecord=page.pads.map(value=>value===null?"":value).join(", ");
+      });
+      const summary = summaryData();
+      el.netlifyStudentId.value = state.studentId;
+      el.netlifyGrade.value = state.grade;
+      el.netlifyProtocol.value = PROTOCOL_NAME;
+      el.netlifyProjectId.value = PROJECT_ID;
+      el.netlifySummary.value = JSON.stringify(summary);
+      el.netlifyPages.value = JSON.stringify(state.pages);
+      el.netlifyInteractions.value = JSON.stringify(state.interactions);
+      el.netlifyScore.value = summary.score;
+      el.netlifyFinishedAt.value = state.finishedAt || "";
+    }
+
+    function submitWork(event){
+  try{if(typeof saveAdminFields==='function')saveAdminFields()}catch(e){}
+  try{if(typeof saveAdminData==='function')saveAdminData()}catch(e){}
+  try{if(typeof updateAdmin==='function')updateAdmin()}catch(e){}
+  try{if(typeof savePageAdmin==='function')savePageAdmin()}catch(e){}
+  try{if(typeof syncAnswers==='function')syncAnswers()}catch(e){}
+  try{if(typeof saveAdminInput==='function'&&typeof el==='object'&&el.teacherComments)saveAdminInput({target:el.teacherComments})}catch(e){}
+  try{if(typeof page==='function'&&typeof el==='object'){
+    const p=page();
+    if(el.answerSelect)p.answer=el.answerSelect.value;
+    if(el.tensSelect)p.tens=el.tensSelect.value;
+    if(el.onesSelect)p.ones=el.onesSelect.value;
+    if(el.tensSelect&&el.onesSelect)p.answerRecord=(p.tens||'?')+' tens and '+(p.ones||'?')+' ones';
+  }}catch(e){}
+  if(!confirm('Are you sure you want to submit this work?')){
+    if(event&&event.preventDefault)event.preventDefault();
+    try{if(typeof recordInteraction==='function')recordInteraction('submit-cancelled',{reason:'student-cancelled'});else if(typeof log==='function')log('submit-cancelled',{reason:'student-cancelled'})}catch(e){}
+    try{if(typeof store==='function')store();else if(typeof saveState==='function')saveState()}catch(e){}
+    return;
+  }
+  let submittedFile='';
+  try{
+    submittedFile=(location.pathname.split('/').pop()||'').toLowerCase();
+    if(submittedFile&&!submittedFile.endsWith('.html'))submittedFile+='.html';
+    const key='p26-pre2-submitted-projects';
+    const data=JSON.parse(localStorage.getItem(key)||'{}');
+    data[submittedFile]={file:submittedFile,submittedAt:new Date().toISOString(),submittedLocal:new Date().toLocaleString()};
+    localStorage.setItem(key,JSON.stringify(data));
+    sessionStorage.setItem('p26-pre2-last-submitted-project',submittedFile);
+    const form=(event&&event.target&&event.target.id==='netlifySubmissionForm')?event.target:document.getElementById('netlifySubmissionForm');
+    if(form)form.setAttribute('action','index.html?finished='+encodeURIComponent(submittedFile)+'#finished');
+  }catch(e){}
+  try{state.finishedAt=new Date().toISOString()}catch(e){}
+  try{if(typeof recordInteraction==='function')recordInteraction('submit',{confirmed:true,submittedFile});else if(typeof log==='function')log('submit',{confirmed:true,submittedFile})}catch(e){}
+  try{if(typeof fillNetlifyFields==='function')fillNetlifyFields();else if(typeof fillNetlify==='function')fillNetlify('');else if(typeof syncHiddenFields==='function')syncHiddenFields()}catch(e){}
+  try{if(typeof store==='function')store();else if(typeof saveState==='function')saveState()}catch(e){}
+}
+
+    function resetWork() {
+      if (!confirm("Reset all CatStringPre2 work for this student?")) return;
+      localStorage.removeItem(STORAGE_KEY);
+      localStorage.removeItem(LEGACY_STORAGE_KEY);
+      state.pageIndex = 0;
+      state.startedAt = Date.now();
+      state.finishedAt = null;
+      state.totalElapsed = 0;
+      state.lastTick = Date.now();
+      state.pages = pagesData.map((numbers, index) => makePage(index, numbers));
+      state.interactions = [];
+      renderPage();
+      recordInteraction("reset-all");
+    }
+
+    function reportHtml(snapsOnly = false) {
+      saveAdminFields();
+      const rows = state.pages.map((page) => `
+        <tr>
+          <td>${page.pageNumber}</td>
+          <td>${page.numbers.join(", ")}</td>
+          <td>${page.pads.map((value) => value === null ? "" : value).join(", ")}</td>
+          <td>${page.correctAnswer.join(", ")}</td>
+          <td>${page.score}</td>
+          <td>${page.attempts}</td>
+          <td>${page.teacherHelpCount}</td>
+          <td>${formatTime(page.pageTime)}</td><td>${formatTime((state.totalSeconds !== undefined ? state.totalSeconds : state.totalElapsed) || 0)}</td>
+          <td>${page.teacherSupportLevel || ""}</td>
+          <td>${page.assessmentType || ""}</td>
+        </tr>
+      `).join("");
+      const details = state.pages.map((page) => `
+        <section>
+          <h2>Page ${page.pageNumber}</h2>
+          <p><strong>Numbers:</strong> ${page.numbers.join(", ")}</p>
+          <p><strong>Student order:</strong> ${page.pads.map((value) => value === null ? "[blank]" : value).join(", ")}</p>
+          <p><strong>Correct order:</strong> ${page.correctAnswer.join(", ")}</p>
+          <p><strong>First attempt:</strong> ${page.firstAttemptTime === null ? "" : formatTime(page.firstAttemptTime)} | <strong>Time to correct:</strong> ${page.timeToCorrect === null ? "" : formatTime(page.timeToCorrect)} | <strong>Time after correct:</strong> ${formatTime(page.timeAfterCorrect)}</p>
+          <p><strong>Between attempts:</strong> ${page.timeBetweenAttempts.map(formatTime).join(", ")}</p>
+          <p><strong>Strategies:</strong> ${page.strategies.join(", ")}</p>
+          <p><strong>Quick comments:</strong> ${page.quickComments.join(", ")}</p>
+          <p><strong>Teacher comments:</strong> ${page.teacherComments || ""}</p>
+          <p><strong>Reflection:</strong> ${page.reflection || ""}</p>
+        </section>
+      `).join("");
+      return `
+        <!doctype html>
+        <html>
+        <head>
+          <title>${PROTOCOL_NAME} ${PROJECT_ID} Report</title>
+          <style>
+            body{font-family:Arial,sans-serif;margin:24px;color:#111}
+            h1,h2{font-weight:500}
+            table{border-collapse:collapse;width:100%;margin:14px 0 24px}
+            th,td{border:1px solid #777;padding:6px;text-align:left}
+            section{break-inside:avoid;border-top:2px solid #333;padding-top:10px;margin-top:18px}
+            @media print{button{display:none}}</style>
+        </head>
+        <body>
+          <button onclick="window.print()">Print / Save PDF</button>
+          <h1>${PROTOCOL_NAME} ${PROJECT_ID} ${snapsOnly ? "PDF Snaps" : "Student Report"}</h1>
+          <p><strong>Student:</strong> ${state.studentId} | <strong>Grade:</strong> ${state.grade}</p>
+          <p><strong>Score:</strong> ${summaryData().score} / ${pagesData.length} | <strong>Total time:</strong> ${formatTime(state.totalElapsed)}</p>
+          <table>
+            <thead><tr><th>Page</th><th>Numbers</th><th>Student Order</th><th>Correct Order</th><th>Score</th><th>Attempts</th><th>Help</th><th>Page Time</th><th>Project Time</th><th>Support</th><th>Type</th></tr></thead>
+            <tbody>${rows}</tbody>
+          </table>
+          ${details}
+          <h2>Interaction Log</h2>
+          <pre>${JSON.stringify(state.interactions, null, 2)}</pre>
+
+</body>
+        </html>
+      `;
+    }
+
+    function openReport(snapsOnly = false) {
+      const win = window.open("", "_blank");
+      if (!win) {
+        alert("Please allow pop-ups to create the PDF report.");
+        return;
+      }
+      win.document.open();
+      win.document.write(reportHtml(snapsOnly));
+      win.document.close();
+      win.focus();
+    }
+
+    function requestSnaps() {
+      const code = prompt("Teacher override code required for PDF Snaps:");
+      if (code === TEACHER_CODE) {
+        recordInteraction("pdf-snaps", { approved: true });
+        openReport(true);
+      } else {
+        recordInteraction("pdf-snaps", { approved: false });
+        alert("Incorrect override code.");
+      }
+    }
+
+    function requestPdfReport() {
+      const code = prompt("Teacher code required to view PDF Report:");
+      if (code === TEACHER_CODE) {
+        recordInteraction("pdf-report", { approved: true });
+        openReport(false);
+      } else {
+        recordInteraction("pdf-report", { approved: false });
+        alert("Incorrect teacher code.");
+      }
+    }
+
+    function tick() {
+      if (!state.started) return;
+      const now = Date.now();
+      const delta = Math.max(0, (now - state.lastTick) / 1000);
+      state.totalElapsed += delta;
+      currentPage().pageTime += delta;
+      if (currentPage().isCorrect) currentPage().timeAfterCorrect += delta;
+      state.lastTick = now;
+      updateStatus();
+      saveState();
+    }
+
+    el.startForm.addEventListener("submit", (event) => {
+      event.preventDefault();
+      state.studentId = el.studentIdInput.value.trim();
+      state.grade = el.gradeInput.value.trim();
+      state.started = true;
+      state.startedAt = state.startedAt || Date.now();
+      state.lastTick = Date.now();
+      el.startScreen.style.display = "none";
+      renderPage();
+      recordInteraction("start", { studentId: state.studentId, grade: state.grade });
+      saveState();
+    });
+
+    el.backPage.addEventListener("click", () => enterPage(state.pageIndex - 1));
+    el.nextPage.addEventListener("click", () => enterPage(state.pageIndex + 1));
+    el.pageSelect.addEventListener("change", () => enterPage(el.pageSelect.value));
+    el.checkPage.addEventListener("click", checkPage);
+    el.netlifyForm.addEventListener("submit", submitWork);
+    el.resetWork.addEventListener("click", resetWork);
+    el.pdfReport.addEventListener("click", requestPdfReport);
+    el.pdfSnaps.addEventListener("click", requestSnaps);
+    el.logHelp.addEventListener("click", () => {
+      const page = currentPage();
+      page.teacherHelpCount += 1;
+      page.teacherHelpHistory.push({ at: new Date().toISOString(), supportLevel: el.supportLevel.value, note: el.teacherComments.value });
+      recordInteraction("teacher-help", { count: page.teacherHelpCount, supportLevel: el.supportLevel.value });
+      updateStatus();
+      saveState();
+    });
+
+    [el.supportLevel, el.assessmentType, el.teacherComments, el.reflectionInput].forEach((input) => {
+      input.addEventListener("change", () => {
+        saveAdminFields();
+        recordInteraction("changed-value", { field: input.id, value: input.value });
+      });
+    });
+
+    [el.quickComments, el.strategyChecks].forEach((container) => {
+      container.addEventListener("change", (event) => {
+        saveAdminFields();
+        recordInteraction("changed-value", { field: container.id, value: event.target.value, checked: event.target.checked });
+      });
+    });
+
+    el.storyTitle.addEventListener("click", () => {
+      recordInteraction("story-text-click", { text: el.storyTitle.textContent });
+    });
+
+    loadState();
+    buildPageSelect();
+    addBankDropEvents();
+    if (state.started && state.studentId) el.startScreen.style.display = "none";
+    renderPage();
+    setInterval(tick, 1000);
+  </script>
+
+
+
+
+<script>
+(function(){
+  const STORE_KEY='p26-page-date-times:'+location.pathname;
+  function pad(n){return String(n).padStart(2,'0')}
+  function localStamp(d=new Date()){return {iso:d.toISOString(),date:d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate()),time:pad(d.getHours())+':'+pad(d.getMinutes())+':'+pad(d.getSeconds()),local:d.toLocaleString()}}
+  function read(){try{return JSON.parse(localStorage.getItem(STORE_KEY)||'{}')}catch(e){return {}}}
+  function write(v){try{localStorage.setItem(STORE_KEY,JSON.stringify(v))}catch(e){}}
+  function currentPageNumber(){
+    const ids=['pageNow','pageStatus','pageNumber','currentPage'];
+    for(const id of ids){const el=document.getElementById(id);if(el){const m=String(el.textContent||el.value||'').match(/\d+/);if(m)return Number(m[0])}}
+    const sel=document.querySelector('#pageSelect, select[id*="page"], select[id*="Page"]');
+    if(sel&&sel.value!==''&&!Number.isNaN(Number(sel.value)))return Number(sel.value)+1;
+    return 1;
+  }
+  function stampPage(){
+    const n=currentPageNumber();
+    const all=read();
+    const now=localStamp();
+    const k='page'+n;
+    all[k]=all[k]||{page:n,firstSeenIso:now.iso,firstSeenLocal:now.local,firstSeenDate:now.date,firstSeenTime:now.time};
+    all[k].lastSeenIso=now.iso;all[k].lastSeenLocal=now.local;all[k].lastSeenDate=now.date;all[k].lastSeenTime=now.time;
+    write(all);
+  }
+  function enrichNetlifyDates(){
+    stampPage();
+    const now=localStamp();
+    const all=read();
+    const pagesInput=document.getElementById('netlifyPages')||document.querySelector('input[name="pages_json"]');
+    if(pagesInput&&pagesInput.value){
+      try{
+        const pages=JSON.parse(pagesInput.value);
+        if(Array.isArray(pages)){
+          pagesInput.value=JSON.stringify(pages.map((p,i)=>{
+            const rec=all['page'+(i+1)]||{};
+            return Object.assign({},p,{pageDate:rec.firstSeenDate||now.date,pageTime:rec.firstSeenTime||now.time,pageFirstSeenIso:rec.firstSeenIso||now.iso,pageFirstSeenLocal:rec.firstSeenLocal||now.local,pageLastSeenIso:rec.lastSeenIso||now.iso,pageLastSeenLocal:rec.lastSeenLocal||now.local,pageSubmittedIso:now.iso,pageSubmittedLocal:now.local});
+          }));
+        }
+      }catch(e){}
+    }
+    const summaryInput=document.getElementById('netlifySummary')||document.querySelector('input[name="summary_json"]');
+    if(summaryInput&&summaryInput.value){
+      try{
+        const summary=JSON.parse(summaryInput.value);
+        summary.submissionDate=now.date;summary.submissionTime=now.time;summary.submissionIso=now.iso;summary.submissionLocal=now.local;summary.pageDateTimes=all;
+        summaryInput.value=JSON.stringify(summary);
+      }catch(e){}
+    }
+    const interactionsInput=document.getElementById('netlifyInteractions')||document.querySelector('input[name="interactions_json"]');
+    if(interactionsInput&&interactionsInput.value){
+      try{const interactions=JSON.parse(interactionsInput.value);if(Array.isArray(interactions)){interactions.push({at:now.iso,type:'page-date-time-record',detail:{submissionLocal:now.local,pageDateTimes:all}});interactionsInput.value=JSON.stringify(interactions)}}catch(e){}
+    }
+  }
+  window.p26StampPageDateTimes=stampPage;
+  window.p26EnrichNetlifyDateTimes=enrichNetlifyDates;
+  document.addEventListener('click',stampPage,true);
+  document.addEventListener('change',stampPage,true);
+  document.addEventListener('input',stampPage,true);
+  setInterval(stampPage,2000);
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',stampPage);else stampPage();
+  const attach=()=>{const form=document.getElementById('netlifySubmissionForm');if(form&&!form.dataset.p26DateTimeHook){form.dataset.p26DateTimeHook='1';form.addEventListener('submit',enrichNetlifyDates)}};
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',attach);else attach();
+})();
+</script>
+
+<script>
+(function(){
+  function hideGradeEntry(){
+    ['gradeSelect','gradeLevel','grade'].forEach(id=>{
+      const el=document.getElementById(id);
+      if(!el)return;
+      if(!el.value)el.value='1';
+      const label=el.closest('label');
+      if(label)label.style.setProperty('display','none','important');
+      el.style.setProperty('display','none','important');
+    });
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',hideGradeEntry);else hideGradeEntry();
+})();
+</script>
+
+<script>
+(function(){
+  function markSubmittedProject(){
+    try{
+      const key='p26-pre2-submitted-projects';
+      const file=(location.pathname.split('/').pop()||'').toLowerCase();
+      if(!file)return;
+      const data=JSON.parse(localStorage.getItem(key)||'{}');
+      data[file]={file,submittedAt:new Date().toISOString(),submittedLocal:new Date().toLocaleString()};
+      localStorage.setItem(key,JSON.stringify(data));
+    }catch(e){}
+  }
+  const attach=()=>{const form=document.getElementById('netlifySubmissionForm');if(form&&!form.dataset.p26LandingShadeHook){form.dataset.p26LandingShadeHook='1';form.addEventListener('submit',markSubmittedProject)}};
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',attach);else attach();
+})();
+</script>
+
+<script>
+(function(){
+  const P26_SHARED_CODES=['1847','2963','3750','4286','5391','6074','7128','8539','9146','1205','2384','3497','4561','5682','6793','7814','8925','9036','1472','2583','3694','4705','5816','6927'];
+  const P26_CODE_EMOJIS=['&#128049;','&#11088;','&#128663;','&#127822;','&#127752;','&#9917;','&#127880;','&#128640;','&#127850;','&#127775;','&#129513;','&#127922;','&#127804;','&#127936;','&#128161;','&#127881;','&#128690;','&#127853;','&#128681;','&#127826;','&#127912;','&#128214;','&#127774;','&#127873;'];
+  function record(type,detail){try{if(typeof recordInteraction==='function')recordInteraction(type,detail);else if(typeof log==='function')log(type,detail)}catch(e){}}
+  function buildEntryButtons(){
+    const input=document.getElementById('studentCode')||document.getElementById('studentIdInput');
+    const start=document.getElementById('startScreen');
+    if(!input||!start)return;
+    input.readOnly=true;
+    input.placeholder='Press a number';
+    let grid=document.getElementById('codeGrid')||start.querySelector('.code-grid')||start.querySelector('.p26-code-grid');
+    if(!grid){grid=document.createElement('div');grid.id='codeGrid';grid.className='code-grid p26-code-grid';const card=start.querySelector('.start-card')||start.firstElementChild||start;card.appendChild(grid)}
+    grid.className='code-grid p26-code-grid';
+    grid.innerHTML=P26_SHARED_CODES.map((code,i)=>'<button type="button" class="code-choice p26-code-choice '+(input.value===code?'selected':'')+'" data-code="'+code+'"><span>'+code+'</span><small class="code-emoji">'+P26_CODE_EMOJIS[i%P26_CODE_EMOJIS.length]+'</small></button>').join('');
+    grid.querySelectorAll('[data-code]').forEach(btn=>btn.addEventListener('click',()=>{input.value=btn.dataset.code;input.dispatchEvent(new Event('input',{bubbles:true}));record('student-code-button',{code:btn.dataset.code});buildEntryButtons()}));
+  }
+  window.renderCodes=buildEntryButtons;
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',buildEntryButtons);else buildEntryButtons();
+})();
+</script>
+
+
+<script id="p26UniformEntryScript">
+(function(){
+  const CODES=['1847','2963','3750','4286','5391','6074','7128','8539','9146','1205','2384','3497','4561','5682','6793','7814','8925','9036','1472','2583','3694','4705','5816','6927'];
+  const EMOJIS=['&#128049;','&#11088;','&#128663;','&#127822;','&#127752;','&#9917;','&#127880;','&#128640;','&#127850;','&#127775;','&#129513;','&#127922;','&#127804;','&#127936;','&#128161;','&#127881;','&#128690;','&#127853;','&#128681;','&#127826;','&#127912;','&#128214;','&#127774;','&#127873;'];
+  function projectName(){const h=document.querySelector('#startScreen h1');return (h&&h.textContent.trim())||document.title||'Cat Project'}
+  function recordPress(code){try{if(typeof recordInteraction==='function')recordInteraction('student-code-button',{code});else if(typeof log==='function')log('student-code-button',{code})}catch(e){}}
+  function normalize(){
+    const screen=document.getElementById('startScreen'); if(!screen) return;
+    let card=screen.querySelector('.start-card')||screen.querySelector('form')||screen.firstElementChild; if(!card) return;
+    const input=document.getElementById('studentCode')||document.getElementById('studentIdInput'); if(!input) return;
+    const oldStart=card.querySelector('button[type="submit"],button.primary,#startBtn');
+    const isForm=card.tagName&&card.tagName.toLowerCase()==='form';
+    const title=projectName();
+    const grade=document.getElementById('gradeSelect')||document.getElementById('gradeLevel')||document.getElementById('grade')||document.getElementById('gradeInput');
+    if(grade){ if(!grade.value) grade.value='1'; const gl=grade.closest('label')||grade; gl.classList.add('p26-entry-hidden'); }
+    input.readOnly=true; input.placeholder='Press a number';
+    card.classList.add('p26-uniform-entry');
+    const titleBar=document.createElement('div'); titleBar.className='p26-entry-title';
+    titleBar.innerHTML='<img src="big-bear-math-logo.png" alt="Big Bear Math"><h1>'+title+'</h1>';
+    const left=document.createElement('div'); left.className='p26-entry-left';
+    const label=document.createElement('label'); label.textContent='Student Code'; label.appendChild(input);
+    const startBtn=document.createElement('button');
+    startBtn.id='startBtn'; startBtn.className='p26-start-button'; startBtn.textContent='Start'; startBtn.type=isForm?'submit':'button'; startBtn.addEventListener('click',function(e){if(!input.value){e.preventDefault();e.stopImmediatePropagation();alert('Press a number first.');}});
+    if(!isForm){
+      startBtn.addEventListener('click',()=>{
+        if(!input.value){alert('Press a number first.');return;}
+        if(oldStart && !oldStart.matches('.p26-code-choice,.code-choice,.code-button')){oldStart.click();return;}
+        if(typeof window.start==='function'){window.start();return;}
+        if(typeof window.begin==='function'){window.begin();return;}
+        if(typeof window.startProject==='function'){window.startProject();return;}
+        if(typeof window.startWork==='function'){window.startWork();return;}
+      });
+    }
+    left.appendChild(label); left.appendChild(startBtn);
+    let grid=document.getElementById('codeGrid');
+    if(!grid){grid=document.createElement('div'); grid.id='codeGrid';}
+    grid.className='p26-code-grid code-grid'; grid.setAttribute('aria-label','Choose your student number');
+    card.innerHTML=''; card.appendChild(titleBar); card.appendChild(left); card.appendChild(grid);
+    function render(){
+      grid.innerHTML=CODES.map((code,i)=>'<button type="button" class="p26-code-choice '+(input.value===code?'selected':'')+'" data-code="'+code+'"><span>'+code+'</span><small class="code-emoji">'+EMOJIS[i%EMOJIS.length]+'</small></button>').join('');
+      grid.querySelectorAll('[data-code]').forEach(btn=>btn.addEventListener('click',()=>{input.value=btn.dataset.code;input.dispatchEvent(new Event('input',{bubbles:true}));recordPress(btn.dataset.code);render()}));
+    }
+    window.renderCodes=render; render();
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',normalize);else normalize();
+})();
+</script>
+<script id="p26Pre2HardeningScript">
+(function(){
+  function codeValue(){const input=document.getElementById('studentCode')||document.getElementById('studentIdInput');return input?input.value.trim():''}
+  function visibleStart(){const s=document.getElementById('startScreen');return s && !s.classList.contains('hidden') && getComputedStyle(s).display!=='none'}
+  function requireCode(event){if(visibleStart()&&!codeValue()){if(event){event.preventDefault();event.stopImmediatePropagation&&event.stopImmediatePropagation();}alert('Press a student number first.');return false}return true}
+  document.addEventListener('submit',function(e){const form=e.target;if(form && (form.id==='startForm'||(form.closest&&form.closest('#startScreen'))))requireCode(e)},true);
+  document.addEventListener('click',function(e){const b=e.target.closest&&e.target.closest('#startBtn,.p26-start-button,button.primary');if(b&&visibleStart()&&!codeValue())requireCode(e)},true);
+  ['start','begin','startProject','startWork'].forEach(function(name){try{const old=window[name];if(typeof old==='function'&&!old.__p26NeedsCode){const wrapped=function(){if(!requireCode())return;return old.apply(this,arguments)};wrapped.__p26NeedsCode=true;window[name]=wrapped;}}catch(e){}});
+  function shuffle(arr){for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]]}return arr}
+  function isAnswerSelect(sel){if(!sel||sel.dataset.p26NoShuffle)return false;const id=(sel.id||'').toLowerCase();if(/page|grade|support|assessment|teacher|quick|strategy/.test(id))return false;if(sel.closest('aside,.admin'))return false;return sel.options&&sel.options.length>3;}
+  function randomizeSelect(sel){if(!isAnswerSelect(sel))return;const selected=sel.value;const opts=[...sel.options];const keep=opts.filter(o=>o.value===''||/^(choose|\?|select)/i.test(o.textContent.trim()));const pool=opts.filter(o=>!keep.includes(o));const sig=pool.map(o=>o.value+'|'+o.textContent).join('~');if(sel.dataset.p26ShuffleSig===sig)return;shuffle(pool);sel.innerHTML='';keep.forEach(o=>sel.appendChild(o));pool.forEach(o=>sel.appendChild(o));sel.value=selected;sel.dataset.p26ShuffleSig=sig;}
+  function randomizeDropdowns(){document.querySelectorAll('select').forEach(randomizeSelect)}
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',randomizeDropdowns);else randomizeDropdowns();
+  new MutationObserver(()=>randomizeDropdowns()).observe(document.documentElement,{childList:true,subtree:true});
+})();
+</script>
+<script id="p26Pre2DirectEntryRepair">
+(function(){
+  function screen(){return document.getElementById('startScreen')}
+  function visibleStart(){const s=screen();return s && !s.classList.contains('hidden') && getComputedStyle(s).display!=='none'}
+  function inputEl(){return document.getElementById('studentCode')||document.getElementById('studentIdInput')||document.querySelector('#startScreen input[type="text"],#startScreen input:not([type])')}
+  function setText(ids,value){ids.forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=value})}
+  function openProject(code){
+    const input=inputEl(); if(input) input.value=code;
+    try{
+      if(typeof state!=='undefined' && state){
+        state.studentId=code;
+        state.student=code;
+        state.studentCode=code;
+        state.grade='1';
+        if(!state.startedAt) state.startedAt=(typeof nowIso==='function'?nowIso():Date.now());
+        if('lastTick' in state) state.lastTick=Date.now();
+      }
+    }catch(e){}
+    try{if(typeof pageStartedAt!=='undefined')pageStartedAt=Date.now();}catch(e){}
+    try{if(typeof log==='function')log('start',{studentId:code,grade:'1'});}catch(e){}
+    try{if(typeof recordInteraction==='function')recordInteraction('start',{studentId:code,grade:'1'});}catch(e){}
+    const s=screen();
+    if(s){s.classList.add('hidden');s.style.setProperty('display','none','important')}
+    ['app','mainApp','workArea'].forEach(id=>{const el=document.getElementById(id);if(el){el.classList.remove('hidden');el.style.removeProperty('display')}});
+    const shell=document.querySelector('.shell'); if(shell){shell.classList.remove('hidden');shell.style.removeProperty('display')}
+    setText(['studentStatus','studentReadout','studentIdStatus'],code);
+    setText(['gradeStatus','gradeReadout'],'Grade 1');
+    if(typeof render==='function')render();
+    if(s){s.classList.add('hidden');s.style.setProperty('display','none','important')}
+    ['app','mainApp','workArea'].forEach(id=>{const el=document.getElementById(id);if(el){el.classList.remove('hidden');el.style.removeProperty('display')}});
+    if(shell){shell.classList.remove('hidden');shell.style.removeProperty('display')}
+    try{if(typeof store==='function')store();}catch(e){}
+    try{if(typeof save==='function')save();}catch(e){}
+    try{if(typeof saveState==='function')saveState();}catch(e){}
+  }
+  function attemptStart(event){
+    const isSubmit=event && event.type==='submit';
+    const btn=!isSubmit && event.target.closest&&event.target.closest('#startBtn,.p26-start-button,button.primary,#startScreen button[type="submit"]');
+    if(!visibleStart() || (!isSubmit && !btn)) return;
+    const input=inputEl();
+    const code=input?String(input.value||'').trim():'';
+    if(!code){if(event){event.preventDefault();event.stopImmediatePropagation&&event.stopImmediatePropagation();}alert('Press a student number first.');return;}
+    if(event){event.preventDefault();event.stopImmediatePropagation&&event.stopImmediatePropagation();}
+    try{openProject(code)}catch(err){alert('This project could not start: '+err.message)}
+  }
+  document.addEventListener('click',attemptStart,true);
+  document.addEventListener('submit',function(event){const s=screen();if(s&&event.target&&s.contains(event.target))attemptStart(event)},true);
+})();
+</script>
+</body>
+</html>
